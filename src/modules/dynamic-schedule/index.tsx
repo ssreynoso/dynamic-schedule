@@ -26,7 +26,7 @@ export const DynamicSchedule = <T,>(props: DynamicScheduleProps<T>) => {
         linesPerRow,
         className,
         linesClassName,
-        headerClassName,
+        headerStyles,
         scheduleItems,
         yAxisLabel,
         ItemComponent,
@@ -75,13 +75,13 @@ export const DynamicSchedule = <T,>(props: DynamicScheduleProps<T>) => {
         <div
             ref={containerRef}
             className={cn(
-                'relative h-full rounded border bg-background px-4',
+                'relative h-full rounded border bg-background',
                 'pretty-scrollbar pretty-scrollbar-y pretty-scrollbar-x overflow-x-auto overflow-y-auto',
                 className
             )}
             onMouseMove={handleMouseMove}
         >
-            <DynamicScheduleHeader className={headerClassName} style={styleObject.columns}>
+            <DynamicScheduleHeader style={{ ...headerStyles, ...styleObject.columns }}>
                 <DynamicScheduleHeaderItem columnId={0}>{yAxisLabel || 'Eje y'}</DynamicScheduleHeaderItem>
                 {columns.map((column) => (
                     <DynamicScheduleHeaderItem key={`th-${column.id}`} onClick={onHeaderClick} columnId={column.id}>
@@ -90,34 +90,24 @@ export const DynamicSchedule = <T,>(props: DynamicScheduleProps<T>) => {
                 ))}
             </DynamicScheduleHeader>
 
-            <DynamicScheduleLines
-                columns={columns.length}
-                rows={rows.length * linesPerRow}
-                columnsStyle={styleObject.columns}
-                rowsStyle={styleObject.rowsLines}
-                className={linesClassName}
-            />
+            {/* <DynamicScheduleCurrentLine containerWidth={containerWidth} headerHeight={48} containerHeight={containerHeight} /> */}
 
-            <DynamicScheduleCurrentLine containerWidth={containerWidth} headerHeight={48} containerHeight={containerHeight} />
+            <DynamicScheduleRows rows={rows} style={styleObject.rows} />
 
-            <DynamicScheduleColumns style={styleObject.columns}>
-                <DynamicScheduleRows rows={rows} style={styleObject.rows} className={cn(`sticky left-0 z-30`)} />
+            {columns.map((column) => {
+                const columnItems = scheduleItems.filter((i) => i.columnId === column.id)
 
-                {columns.map((column) => {
-                    const columnItems = scheduleItems.filter((i) => i.columnId === column.id)
-
-                    return (
-                        <DynamicScheduleColumn key={generateUUID()}>
-                            <VoidCellsColumn style={styleObject.rows}>
-                                <VoidCells column={column} rows={rows} VoidItemComponent={VoidItemComponent} ItemComponent={ItemComponent} />
-                            </VoidCellsColumn>
-                            <ColumnItemsContainer rows={rows.length} style={styleObject.rows}>
-                                <ColumnItems ItemComponent={ItemComponent} columnItems={columnItems} />
-                            </ColumnItemsContainer>
-                        </DynamicScheduleColumn>
-                    )
-                })}
-            </DynamicScheduleColumns>
+                return (
+                    <DynamicScheduleColumn key={`column-${column.id}`}>
+                        <VoidCellsColumn style={styleObject.rows}>
+                            <VoidCells column={column} rows={rows} VoidItemComponent={VoidItemComponent} ItemComponent={ItemComponent} />
+                        </VoidCellsColumn>
+                        <ColumnItemsContainer rows={rows.length} style={styleObject.rows}>
+                            <ColumnItems ItemComponent={ItemComponent} columnItems={columnItems} />
+                        </ColumnItemsContainer>
+                    </DynamicScheduleColumn>
+                )
+            })}
         </div>
     )
 }

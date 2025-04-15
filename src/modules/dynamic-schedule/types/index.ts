@@ -59,7 +59,9 @@ export type DynamicScheduleProps<T> = {
     minColumnWidth: number
     linesPerRow: number
 
-    headerClassName?: string
+    headerStyles?: {
+        backgroundColor?: string
+    }
     linesClassName?: string
     className?: string
 

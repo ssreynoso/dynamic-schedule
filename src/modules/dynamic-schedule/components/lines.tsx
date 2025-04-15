@@ -13,7 +13,7 @@ export const DynamicScheduleLines = ({ columns, rows, columnsStyle, rowsStyle, c
     const columnsArray = Array.from<number>({ length: columns }).fill(0)
 
     return (
-        <div className='absolute left-0 top-12 grid h-auto w-full px-4' style={rowsStyle}>
+        <div className='absolute left-0 top-12 grid h-auto w-full' style={rowsStyle}>
             {rowsArray.map((_, rowIndex) => (
                 <div key={`line-${rowIndex}`} className={cn('grid h-full border-b', className)} style={columnsStyle}>
                     {columnsArray.map((_, columnIndex) => (

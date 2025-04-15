@@ -16,7 +16,7 @@ export const ColumnItem = <T,>({ item, rowStart, rowEnd, ItemComponent }: Props<
                 gridRowEnd: rowEnd,
             }}
         >
-            <ItemComponent item={item} className='relative z-10' />
+            <ItemComponent item={item} className='relative' />
         </div>
     )
 }

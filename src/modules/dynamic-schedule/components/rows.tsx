@@ -1,4 +1,4 @@
-import { cn, generateUUID } from '../lib/utils'
+import { generateUUID } from '../lib/utils'
 import { Row } from '../types'
 
 type Props = {
@@ -7,11 +7,11 @@ type Props = {
     className?: string
 }
 
-export const DynamicScheduleRows = ({ rows, style, className }: Props) => {
+export const DynamicScheduleRows = ({ rows, style }: Props) => {
     return (
-        <div className={cn('grid w-full', className)} style={style}>
+        <div className='grid w-full sticky left-0 z-[1]' style={style}>
             {rows.map((row) => (
-                <p key={generateUUID()} className='relative flex h-full w-full items-center justify-center p-0 pr-2 text-muted-foreground'>
+                <p key={generateUUID()} className='relative flex h-full w-full items-center text-center justify-center p-2'>
                     {row.label}
                 </p>
             ))}

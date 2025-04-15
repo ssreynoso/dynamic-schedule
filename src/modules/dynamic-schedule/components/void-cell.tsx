@@ -22,9 +22,9 @@ export const VoidCell = <T,>({ column, cell, VoidItemComponent }: Props<T>) => {
             {isOver ? (
                 <div className='absolute top-0 h-full w-full bg-slate-300'></div>
             ) : (
-                VoidItemComponent && <VoidItemComponent columnId={column.id} row={cell.row} className='z-10' isDragging={!!activeItem} />
+                VoidItemComponent && <VoidItemComponent columnId={column.id} row={cell.row} isDragging={!!activeItem} />
             )}
-            <div id={id} ref={setNodeRef} className='absolute top-0 z-0 h-full w-full'></div>
+            <div id={id} ref={setNodeRef} className='absolute top-0 h-full w-full'></div>
         </div>
     )
 }
