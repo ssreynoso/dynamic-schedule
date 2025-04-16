@@ -23,22 +23,27 @@ export const DynamicSchedule = <T,>(props: DynamicScheduleProps<T>) => {
                 const columnItems = items.filter((i) => i.columnId === column.id)
                 const coincidences = getCoincidences(columnItems)
 
-                console.log('coincidences', coincidences)
-
                 return (
                     <DynamicScheduleColumn key={`ds-column-[${idx}]`} id={`ds-column-[${idx}]`} isLast={idx === columns.length - 1}>
-                        {columnItems.map((item, idx) => {
-                            const itemCoincidences = coincidences[idx]
+                        {columnItems.map((item, idx2) => {
+                            const itemCoincidences = coincidences[idx2]
 
                             return (
-                                <DynamicScheduleItem coincidences={itemCoincidences} row={item.rowStart} rowSpan={item.rowSpan}>
+                                <DynamicScheduleItem
+                                    key={`ds-[${idx}]-[${idx2}]`}
+                                    coincidences={itemCoincidences}
+                                    row={item.rowStart}
+                                    rowSpan={item.rowSpan}
+                                >
                                     <ScheduleItemComponent original={item.original} />
                                 </DynamicScheduleItem>
                             )
                         })}
                         <DynamicScheduleColumnHeader className='bg-amber-50'>{column.label}</DynamicScheduleColumnHeader>
-                        {rows.map(() => (
-                            <div className={cn('w-full h-full border-b flex items-center justify-center')}>Void</div>
+                        {rows.map((_, idx3) => (
+                            <div key={`void-[${idx}]-[${idx3}]`} className={cn('w-full h-full border-b flex items-center justify-center')}>
+                                Void
+                            </div>
                         ))}
                     </DynamicScheduleColumn>
                 )

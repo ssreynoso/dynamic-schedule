@@ -40,10 +40,13 @@ function App() {
     ]
 
     const [scheduleItems, setScheduleItems] = useState([
-        { id: '0', columnId: '1', rowStart: 1, rowSpan: 1, original: { name: 'Alberto' } },
+        { id: '0', columnId: '1', rowStart: 1, rowSpan: 2, original: { name: '1' } },
+        { id: '3', columnId: '1', rowStart: 1, rowSpan: 2, original: { name: '2' } },
+        { id: '4', columnId: '1', rowStart: 2, rowSpan: 5, original: { name: '3' } },
+        { id: '5', columnId: '1', rowStart: 3, rowSpan: 2, original: { name: '4' } },
+        { id: '6', columnId: '1', rowStart: 2, rowSpan: 4, original: { name: '5' } },
         { id: '1', columnId: '2', rowStart: 2, rowSpan: 2, original: { name: 'Juan' } },
         { id: '2', columnId: '3', rowStart: 3, rowSpan: 3, original: { name: 'Pepe' } },
-        { id: '3', columnId: '1', rowStart: 1, rowSpan: 3, original: { name: 'Ángel de Brito' } },
     ])
 
     return (

@@ -5,36 +5,48 @@ export interface ItemCoincidences {
     rows: {
         row: number
         coincidentItems: number
+        order: number
+        rowStartCoincidences: number
     }[]
 }
 
-export const getCoincidences = <T>(items: DynamicScheduleProps<T>['items']) => {
-    const coincidences: ItemCoincidences[] = items.map((currentItem) => {
+export function getCoincidences<T>(items: DynamicScheduleProps<T>['items']): ItemCoincidences[] {
+    return items.map((currentItem) => {
         const start = currentItem.rowStart
         const end = start + currentItem.rowSpan - 1
 
-        const rows = []
+        const rowsInfo = []
         for (let row = start; row <= end; row++) {
-            let count = 0
+            const overlappingItems = []
+            let rowStartCoincidences = 0
+
             for (const otherItem of items) {
-                if (otherItem.id === currentItem.id) continue
+                if (otherItem.id === currentItem.id) {
+                    overlappingItems.push(otherItem)
+                    continue
+                }
 
                 const otherStart = otherItem.rowStart
                 const otherEnd = otherStart + otherItem.rowSpan - 1
-
-                // Si la fila actual cae dentro del rango de otherItem, hay coincidencia
                 if (row >= otherStart && row <= otherEnd) {
-                    count++
+                    overlappingItems.push(otherItem)
+                }
+
+                if (row === start && otherItem.rowStart === start) {
+                    rowStartCoincidences++
                 }
             }
-            rows.push({ row, coincidentItems: count })
+
+            const order = overlappingItems.findIndex(i => i.id === currentItem.id) + 1
+
+            const coincidentItems = overlappingItems.length - 1
+
+            rowsInfo.push({ row, coincidentItems, order, rowStartCoincidences })
         }
 
         return {
             id: currentItem.id,
-            rows,
+            rows: rowsInfo,
         }
     })
-
-    return coincidences
 }
