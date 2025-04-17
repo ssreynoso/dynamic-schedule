@@ -1,7 +1,21 @@
 import { PropsWithChildren } from 'react'
+import { cn } from '../lib/utils'
 
-export const DynamicScheduleColumn = (props: PropsWithChildren) => {
-    const { children } = props
+type DynamicScheduleColumnProps = PropsWithChildren<{
+    id: string
+    isLast?: boolean
+    className?: string
+}>
 
-    return <div className='relative h-full w-full'>{children}</div>
+export const DynamicScheduleColumn = (props: DynamicScheduleColumnProps) => {
+    const { id, className, isLast, children } = props
+
+    return (
+        <div
+            id={id}
+            className={cn('w-full h-full border-r grid grid-cols-1 grid-rows-[40px] auto-rows-[100px] relative', className, isLast && 'border-none')}
+        >
+            {children}
+        </div>
+    )
 }

@@ -1,10 +1,10 @@
-import { cn } from '../../dynamic-schedule/lib/utils'
 import { getCoincidences } from '../lib/get-coincidences'
 import { DynamicScheduleProps } from '../types'
 import { DynamicScheduleColumn } from './column'
 import { DynamicScheduleColumnHeader } from './column-header'
 import { DynamicScheduleContainer } from './container'
 import { DynamicScheduleItem } from './item'
+import { VoidCell } from './void-cell'
 
 export const DynamicSchedule = <T,>(props: DynamicScheduleProps<T>) => {
     const { columns, rows, firstColumnText = '', items, ScheduleItemComponent } = props
@@ -41,9 +41,7 @@ export const DynamicSchedule = <T,>(props: DynamicScheduleProps<T>) => {
                         })}
                         <DynamicScheduleColumnHeader className='bg-amber-50'>{column.label}</DynamicScheduleColumnHeader>
                         {rows.map((_, idx3) => (
-                            <div key={`void-[${idx}]-[${idx3}]`} className={cn('w-full h-full border-b flex items-center justify-center')}>
-                                Void
-                            </div>
+                            <VoidCell key={`void-[${idx}]-[${idx3}]`} />
                         ))}
                     </DynamicScheduleColumn>
                 )

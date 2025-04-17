@@ -1,5 +1,5 @@
 import { PropsWithChildren } from 'react'
-import { cn } from '../../dynamic-schedule/lib/utils'
+import { cn } from '../lib/utils'
 
 type DynamicScheduleColumnHeaderProps = PropsWithChildren<{
     className?: string
