@@ -18,6 +18,8 @@ export const DynamicScheduleDragOverlay = () => {
                     <p>
                         ({activeItem.colIndex}, {activeItem.rowIndex})
                     </p>
+
+                    {/* <div className='w-[300px] h-[300px] absolute left-[-100%] top-[-10%] bg-lime-300'>asd</div> */}
                 </div>
             ) : null}
         </DragOverlay>
