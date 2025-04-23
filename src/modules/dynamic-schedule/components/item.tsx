@@ -1,16 +1,22 @@
 import { PropsWithChildren } from 'react'
 import { ItemCoincidences } from '../lib/get-coincidences'
 import { cn } from '../lib/utils'
+import { useDraggable } from '@dnd-kit/core'
 
 type DynamicScheduleAbsoluteProps = PropsWithChildren<{
     className?: string
+    id: string
     row: number
     rowSpan: number
     coincidences: ItemCoincidences
 }>
 
 export const DynamicScheduleItem = (props: DynamicScheduleAbsoluteProps) => {
-    const { className, children, row, rowSpan, coincidences } = props
+    const { className, children, row, id, rowSpan, coincidences } = props
+
+    const { attributes, listeners, setNodeRef } = useDraggable({
+        id,
+    })
 
     const firstRowCoincidence = coincidences.rows[0].rowStartCoincidences === 0
 
@@ -31,7 +37,7 @@ export const DynamicScheduleItem = (props: DynamicScheduleAbsoluteProps) => {
     }
 
     return (
-        <div className={cn('absolute  bg-green-400', className)} style={styles}>
+        <div ref={setNodeRef} className={cn('absolute  bg-green-400', className)} style={styles} {...listeners} {...attributes}>
             {children}
         </div>
     )
