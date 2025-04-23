@@ -37,7 +37,7 @@ export const DynamicScheduleItem = (props: DynamicScheduleAbsoluteProps) => {
     }
 
     return (
-        <div ref={setNodeRef} className={cn('absolute  bg-green-400', className)} style={styles} {...listeners} {...attributes}>
+        <div id={id} ref={setNodeRef} className={cn('absolute  bg-green-400', className)} style={styles} {...listeners} {...attributes}>
             {children}
         </div>
     )

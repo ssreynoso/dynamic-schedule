@@ -83,6 +83,15 @@ function App() {
                         </div>
                     )
                 }}
+                onChange={({ items }) => {
+                    console.log('items', items)
+
+                    const promise = new Promise<void>((resolve) => {
+                        confirm('Are you sure?') ? resolve() : resolve()
+                    })
+
+                    return promise
+                }}
             />
         </div>
     )

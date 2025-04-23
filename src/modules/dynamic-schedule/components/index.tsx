@@ -11,7 +11,7 @@ import { DynamicScheduleItem } from './item'
 import { VoidCell } from './void-cell'
 
 export const DynamicSchedule = <T,>(props: DynamicScheduleProps<T>) => {
-    const { columns, rows, firstColumnText = '', items, ScheduleItemComponent } = props
+    const { columns, rows, firstColumnText = '', items, ScheduleItemComponent, onChange } = props
 
     const isDragging = useDynamicScheduleStore((state) => state.isDragging)
 
@@ -24,7 +24,14 @@ export const DynamicSchedule = <T,>(props: DynamicScheduleProps<T>) => {
     }
 
     return (
-        <DynamicScheduleContainer items={items} columns={columns} firstColumnWidth={firstColumnWidth} rowHeight={rowHeight}>
+        <DynamicScheduleContainer
+            items={items}
+            columns={columns}
+            firstColumnWidth={firstColumnWidth}
+            rowHeight={rowHeight}
+            onChange={onChange}
+            headerHeight={headerHeight}
+        >
             <DynamicScheduleFixedColumn headerHeight={headerHeight} firstColumnText={firstColumnText} rows={rows} rowHeight={rowHeight} />
             {columns.map((column, idx) => {
                 const columnItems = items.filter((i) => i.columnId === column.id)

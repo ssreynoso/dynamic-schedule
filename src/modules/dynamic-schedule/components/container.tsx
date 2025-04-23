@@ -1,5 +1,5 @@
 import { DragMoveEvent, useDroppable } from '@dnd-kit/core'
-import { PropsWithChildren, useRef, useState } from 'react'
+import React, { PropsWithChildren, useRef, useState } from 'react'
 import { DndContext, DragEndEvent, DragStartEvent } from '@dnd-kit/core'
 
 import { DynamicScheduleProps, Item } from '../types'
@@ -9,7 +9,9 @@ import { DynamicScheduleDragOverlay } from './drag-overlay'
 type DynamicScheduleContainerProps<T> = PropsWithChildren<{
     items: DynamicScheduleProps<T>['items']
     columns: DynamicScheduleProps<T>['columns']
+    onChange: DynamicScheduleProps<T>['onChange']
     firstColumnWidth: number
+    headerHeight: number
     rowHeight: number
 }>
 
@@ -23,8 +25,8 @@ type ActiveItemStartData<T> = {
     relativeY: number
 }
 
-export const DynamicScheduleContainer = <T,>(props: DynamicScheduleContainerProps<T>) => {
-    const { items, firstColumnWidth, children, columns, rowHeight } = props
+const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<T>) => {
+    const { items, firstColumnWidth, children, columns, rowHeight, onChange } = props
 
     const containerRef = useRef<HTMLDivElement>(null)
     const containerId = 'dynamic-schedule-container'
@@ -34,6 +36,7 @@ export const DynamicScheduleContainer = <T,>(props: DynamicScheduleContainerProp
 
     const columnWidth = useDynamicScheduleStore((state) => state.columnWidth)
     const setIsDragging = useDynamicScheduleStore((state) => state.setIsDragging)
+    const activeItem = useDynamicScheduleStore((state) => state.activeItem)
     const setActiveItem = useDynamicScheduleStore((state) => state.setActiveItem)
 
     const styles = {
@@ -43,7 +46,7 @@ export const DynamicScheduleContainer = <T,>(props: DynamicScheduleContainerProp
     const [data, setData] = useState<ActiveItemStartData<T> | null>(null)
 
     const handleDragMove = (event: DragMoveEvent) => {
-        if (!data) return
+        if (!data || !containerRef.current) return
 
         const currentColumn = Math.floor((data.relativeX + event.delta.x) / (columnWidth || 0))
         const currentRow = Math.floor((data.relativeY + event.delta.y) / rowHeight)
@@ -76,13 +79,29 @@ export const DynamicScheduleContainer = <T,>(props: DynamicScheduleContainerProp
             relativeY: rowInPixels,
             rowSpan: itemToMove.rowSpan,
         })
-
-        setActiveItem({ id: event.active.id.toString() })
         setIsDragging(true)
     }
 
     const handleDragEnd = (event: DragEndEvent) => {
         console.log('handleDragEnd', event)
+
+        void finalizeDrag()
+    }
+
+    // ------- 4) lógica final asíncrona ----------------------------
+    const finalizeDrag = async () => {
+        const newItem: Item<T> | undefined = items.find((i) => i.id === data?.itemToMove.id)
+
+        if (!newItem || !activeItem || !data) return
+
+        const newItemCopy = { ...newItem }
+
+        newItemCopy.columnId = columns[activeItem.colIndex].id
+        newItemCopy.rowStart = activeItem.rowIndex + 1
+        newItemCopy.rowSpan = activeItem.rowSpan
+        newItemCopy.original = data.itemToMove.original
+
+        await onChange({ items: [newItemCopy] })
 
         setActiveItem(null)
         setIsDragging(false)
@@ -105,3 +124,5 @@ export const DynamicScheduleContainer = <T,>(props: DynamicScheduleContainerProp
         </DndContext>
     )
 }
+
+export const DynamicScheduleContainer = React.memo(DynamicScheduleContainerInner) as typeof DynamicScheduleContainerInner

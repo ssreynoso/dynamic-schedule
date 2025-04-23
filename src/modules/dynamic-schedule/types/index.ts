@@ -16,10 +16,15 @@ export interface Item<T> {
     original: T
 }
 
+interface OnChangeInput<T> {
+    items: Item<T>[]
+}
+
 export interface DynamicScheduleProps<T> {
     columns: Column[]
     rows: Row[]
     firstColumnText?: string
     items: Item<T>[]
     ScheduleItemComponent: React.FC<{ original: T }>
+    onChange: (input: OnChangeInput<T>) => Promise<void>
 }
