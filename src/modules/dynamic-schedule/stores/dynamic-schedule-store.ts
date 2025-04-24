@@ -20,7 +20,7 @@ export interface DynamicScheduleStore {
     isDragging: boolean
     setIsDragging: (isDragging: boolean) => void
     activeItem: ActiveItem | null
-    setActiveItem: (pointer: Partial<ActiveItem> | null) => void
+    setActiveItem: (activeItem: Partial<ActiveItem> | null) => void
 }
 
 export const useDynamicScheduleStore = create<DynamicScheduleStore>((set, get) => ({

@@ -8,11 +8,12 @@ import { DynamicScheduleDragOverlay } from './drag-overlay'
 
 type DynamicScheduleContainerProps<T> = PropsWithChildren<{
     items: DynamicScheduleProps<T>['items']
+    rows: DynamicScheduleProps<T>['rows']
     columns: DynamicScheduleProps<T>['columns']
     onChange: DynamicScheduleProps<T>['onChange']
-    firstColumnWidth: number
     headerHeight: number
     rowHeight: number
+    styles?: React.CSSProperties
 }>
 
 type ActiveItemStartData<T> = {
@@ -26,7 +27,7 @@ type ActiveItemStartData<T> = {
 }
 
 const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<T>) => {
-    const { items, firstColumnWidth, children, columns, rowHeight, onChange } = props
+    const { items, children, columns, rows, rowHeight, styles, onChange } = props
 
     const containerRef = useRef<HTMLDivElement>(null)
     const containerId = 'dynamic-schedule-container'
@@ -36,12 +37,7 @@ const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<
 
     const columnWidth = useDynamicScheduleStore((state) => state.columnWidth)
     const setIsDragging = useDynamicScheduleStore((state) => state.setIsDragging)
-    const activeItem = useDynamicScheduleStore((state) => state.activeItem)
     const setActiveItem = useDynamicScheduleStore((state) => state.setActiveItem)
-
-    const styles = {
-        gridTemplateColumns: `${firstColumnWidth}px repeat(${columns.length}, minmax(18rem, 1fr))`,
-    }
 
     const [data, setData] = useState<ActiveItemStartData<T> | null>(null)
 
@@ -79,6 +75,10 @@ const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<
             relativeY: rowInPixels,
             rowSpan: itemToMove.rowSpan,
         })
+        setActiveItem({
+            id: itemToMove.id,
+            rowSpan: itemToMove.rowSpan,
+        })
         setIsDragging(true)
     }
 
@@ -88,11 +88,22 @@ const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<
         void finalizeDrag()
     }
 
-    // ------- 4) lógica final asíncrona ----------------------------
     const finalizeDrag = async () => {
+        const activeItem = useDynamicScheduleStore.getState().activeItem
         const newItem: Item<T> | undefined = items.find((i) => i.id === data?.itemToMove.id)
 
-        if (!newItem || !activeItem || !data) return
+        if (
+            !newItem ||
+            !activeItem ||
+            !data ||
+            activeItem.colIndex < 0 ||
+            activeItem.colIndex >= columns.length ||
+            activeItem.rowIndex < 0 ||
+            activeItem.rowIndex >= rows.length
+        ) {
+            close()
+            return
+        }
 
         const newItemCopy = { ...newItem }
 
@@ -103,6 +114,10 @@ const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<
 
         await onChange({ items: [newItemCopy] })
 
+        close()
+    }
+
+    const close = () => {
         setActiveItem(null)
         setIsDragging(false)
     }

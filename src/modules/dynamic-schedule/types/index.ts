@@ -27,4 +27,8 @@ export interface DynamicScheduleProps<T> {
     items: Item<T>[]
     ScheduleItemComponent: React.FC<{ original: T }>
     onChange: (input: OnChangeInput<T>) => Promise<void>
+    firstColumnWidth: number
+    headerHeight: number
+    rowHeight: number
+    minColumnWidth: number
 }

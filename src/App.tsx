@@ -49,6 +49,11 @@ function App() {
         { id: '2', columnId: '3', rowStart: 3, rowSpan: 3, original: { name: '7' } },
     ])
 
+    const firstColumnWidth = 64
+    const headerHeight = 40
+    const rowHeight = 100
+    const minColumnWidth = 400
+
     return (
         <div className='container h-screen mx-auto'>
             {/* <DynamicSchedule
@@ -73,6 +78,10 @@ function App() {
                 }}
             /> */}
             <DynamicSchedule
+                firstColumnWidth={firstColumnWidth}
+                headerHeight={headerHeight}
+                rowHeight={rowHeight}
+                minColumnWidth={minColumnWidth}
                 items={scheduleItems}
                 columns={columns}
                 rows={horarios}
@@ -86,7 +95,23 @@ function App() {
                 onChange={({ items }) => {
                     console.log('items', items)
 
-                    const promise = new Promise<void>((resolve) => setTimeout(resolve, 2000))
+                    setScheduleItems((prevItems) => {
+                        const newItems = [...prevItems]
+
+                        items.forEach((item) => {
+                            const index = newItems.findIndex((i) => i.id === item.id)
+
+                            if (index !== -1) {
+                                newItems[index] = item
+                            } else {
+                                newItems.push(item)
+                            }
+                        })
+
+                        return newItems
+                    })
+
+                    const promise = new Promise<void>((resolve) => setTimeout(resolve, 0))
 
                     return promise
                 }}

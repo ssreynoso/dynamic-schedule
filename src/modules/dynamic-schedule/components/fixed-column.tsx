@@ -11,6 +11,8 @@ interface DynamicScheduleFixedColumnProps {
 export const DynamicScheduleFixedColumn = (props: DynamicScheduleFixedColumnProps) => {
     const { firstColumnText = '', rows, rowHeight, headerHeight } = props
 
+    console.log('rendering fixed column')
+
     return (
         <DynamicScheduleColumn
             id='dynamics-schedule-fixed-column'
