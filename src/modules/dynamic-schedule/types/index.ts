@@ -1,3 +1,6 @@
+import { DraggableAttributes } from '@dnd-kit/core'
+import { SyntheticListenerMap } from '@dnd-kit/core/dist/hooks/utilities'
+
 export interface Column {
     id: string
     label: string
@@ -20,12 +23,20 @@ interface OnChangeInput<T> {
     items: Item<T>[]
 }
 
+interface ScheduleItemComponentProps<T> {
+    original: T
+    draggableProps?: {
+        attributes: DraggableAttributes
+        listeners: SyntheticListenerMap | undefined
+    }
+}
+
 export interface DynamicScheduleProps<T> {
     columns: Column[]
     rows: Row[]
     firstColumnText?: string
     items: Item<T>[]
-    ScheduleItemComponent: React.FC<{ original: T }>
+    ScheduleItemComponent: React.FC<ScheduleItemComponentProps<T>>
     onChange: (input: OnChangeInput<T>) => Promise<void>
     firstColumnWidth: number
     headerHeight: number

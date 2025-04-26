@@ -59,14 +59,14 @@ export const DynamicSchedule = <T,>(props: DynamicScheduleProps<T>) => {
 
                             return (
                                 <DynamicScheduleItem
+                                    item={item}
+                                    ScheduleItemComponent={ScheduleItemComponent}
                                     key={item.id}
                                     id={item.id}
                                     coincidences={itemCoincidences}
                                     row={item.rowStart}
                                     rowSpan={item.rowSpan}
-                                >
-                                    <ScheduleItemComponent original={item.original} />
-                                </DynamicScheduleItem>
+                                />
                             )
                         })}
                         <DynamicScheduleColumnHeader className='bg-amber-50'>{column.label}</DynamicScheduleColumnHeader>

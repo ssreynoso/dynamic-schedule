@@ -52,7 +52,7 @@ function App() {
     const firstColumnWidth = 64
     const headerHeight = 40
     const rowHeight = 100
-    const minColumnWidth = 400
+    const minColumnWidth = 300
 
     return (
         <div className='container h-screen mx-auto'>
@@ -85,9 +85,14 @@ function App() {
                 items={scheduleItems}
                 columns={columns}
                 rows={horarios}
-                ScheduleItemComponent={({ original }) => {
+                ScheduleItemComponent={({ original, draggableProps }) => {
                     return (
                         <div className='bg-red-300 w-full h-full border'>
+                            <div
+                                className='bg-emerald-300 w-[20px] h-[20px] rounded-full absolute top-1 right-1 cursor-move'
+                                {...draggableProps?.attributes}
+                                {...draggableProps?.listeners}
+                            ></div>
                             <p>{original.name}</p>
                         </div>
                     )
