@@ -1,33 +1,25 @@
-import { DragMoveEvent, useDroppable } from '@dnd-kit/core'
-import React, { PropsWithChildren, useRef, useState } from 'react'
-import { DndContext, DragEndEvent, DragStartEvent } from '@dnd-kit/core'
+import { useDroppable } from '@dnd-kit/core'
+import React, { PropsWithChildren, useRef } from 'react'
+import { DndContext } from '@dnd-kit/core'
 
-import { DynamicScheduleProps, Item } from '../types'
-import { useDynamicScheduleStore } from '../stores/dynamic-schedule-store'
+import { DynamicScheduleProps } from '../types'
 import { DynamicScheduleDragOverlay } from './drag-overlay'
+import { useContainerDragAndDrop } from '../hooks/use-container-drag-and-drop'
+import { useScrollIndicator } from '../hooks/use-scroll-indicator'
 
 type DynamicScheduleContainerProps<T> = PropsWithChildren<{
     items: DynamicScheduleProps<T>['items']
     rows: DynamicScheduleProps<T>['rows']
     columns: DynamicScheduleProps<T>['columns']
+    scrollIndicator: DynamicScheduleProps<T>['scrollIndicator']
     onChange: DynamicScheduleProps<T>['onChange']
     headerHeight: number
     rowHeight: number
     styles?: React.CSSProperties
 }>
 
-type ActiveItemStartData<T> = {
-    itemToMove: Item<T>
-    columnIndex: number
-    column: number
-    row: number
-    rowSpan: number
-    relativeX: number
-    relativeY: number
-}
-
 const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<T>) => {
-    const { items, children, columns, rows, rowHeight, styles, onChange } = props
+    const { items, children, columns, rows, rowHeight, styles, onChange, scrollIndicator } = props
 
     const containerRef = useRef<HTMLDivElement>(null)
     const containerId = 'dynamic-schedule-container'
@@ -35,92 +27,16 @@ const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<
         id: containerId,
     })
 
-    const columnWidth = useDynamicScheduleStore((state) => state.columnWidth)
-    const setIsDragging = useDynamicScheduleStore((state) => state.setIsDragging)
-    const setActiveItem = useDynamicScheduleStore((state) => state.setActiveItem)
+    useScrollIndicator({ containerRef, scrollIndicator })
 
-    const [data, setData] = useState<ActiveItemStartData<T> | null>(null)
-
-    const handleDragMove = (event: DragMoveEvent) => {
-        if (!data || !containerRef.current) return
-
-        const currentColumn = Math.floor((data.relativeX + event.delta.x) / (columnWidth || 0))
-        const currentRow = Math.floor((data.relativeY + event.delta.y) / rowHeight)
-
-        setActiveItem({
-            id: data.itemToMove.id,
-            colIndex: currentColumn,
-            rowIndex: currentRow,
-            rowSpan: data.rowSpan,
-        })
-    }
-
-    const handleDragStart = (event: DragStartEvent) => {
-        const itemToMove = items.find((i) => i.id === event.active.id.toString())
-
-        if (!itemToMove) return
-
-        const columnIndex = columns.findIndex((c) => c.id === itemToMove.columnId)
-        const column = columnIndex + 1
-        const row = itemToMove.rowStart
-        const columnInPixels = columnIndex * (columnWidth || 0)
-        const rowInPixels = (itemToMove.rowStart - 1) * rowHeight
-
-        setData({
-            itemToMove,
-            columnIndex,
-            column,
-            row,
-            relativeX: columnInPixels + (columnWidth || 0) / 2,
-            relativeY: rowInPixels,
-            rowSpan: itemToMove.rowSpan,
-        })
-        setActiveItem({
-            id: itemToMove.id,
-            rowSpan: itemToMove.rowSpan,
-        })
-        setIsDragging(true)
-    }
-
-    const handleDragEnd = (event: DragEndEvent) => {
-        console.log('handleDragEnd', event)
-
-        void finalizeDrag()
-    }
-
-    const finalizeDrag = async () => {
-        const activeItem = useDynamicScheduleStore.getState().activeItem
-        const newItem: Item<T> | undefined = items.find((i) => i.id === data?.itemToMove.id)
-
-        if (
-            !newItem ||
-            !activeItem ||
-            !data ||
-            activeItem.colIndex < 0 ||
-            activeItem.colIndex >= columns.length ||
-            activeItem.rowIndex < 0 ||
-            activeItem.rowIndex >= rows.length
-        ) {
-            close()
-            return
-        }
-
-        const newItemCopy = { ...newItem }
-
-        newItemCopy.columnId = columns[activeItem.colIndex].id
-        newItemCopy.rowStart = activeItem.rowIndex + 1
-        newItemCopy.rowSpan = activeItem.rowSpan
-        newItemCopy.original = data.itemToMove.original
-
-        await onChange({ items: [newItemCopy] })
-
-        close()
-    }
-
-    const close = () => {
-        setActiveItem(null)
-        setIsDragging(false)
-    }
+    const { handleDragStart, handleDragMove, handleDragEnd } = useContainerDragAndDrop({
+        containerRef,
+        items,
+        rows,
+        columns,
+        onChange,
+        rowHeight,
+    })
 
     return (
         <DndContext onDragMove={handleDragMove} onDragStart={handleDragStart} onDragEnd={handleDragEnd}>

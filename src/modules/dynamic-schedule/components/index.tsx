@@ -24,6 +24,7 @@ export const DynamicSchedule = <T,>(props: DynamicScheduleProps<T>) => {
         headerHeight,
         rowHeight,
         minColumnWidth,
+        scrollIndicator,
     } = props
 
     const isDragging = useDynamicScheduleStore((state) => state.isDragging)
@@ -46,6 +47,7 @@ export const DynamicSchedule = <T,>(props: DynamicScheduleProps<T>) => {
             rowHeight={rowHeight}
             rows={rows}
             onChange={onChange}
+            scrollIndicator={scrollIndicator}
             headerHeight={headerHeight}
         >
             <DynamicScheduleFixedColumn headerHeight={headerHeight} firstColumnText={firstColumnText} rows={rows} rowHeight={rowHeight} />

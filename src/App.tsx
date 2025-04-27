@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { DynamicSchedule } from './modules/dynamic-schedule/components'
 
 function App() {
@@ -54,30 +54,25 @@ function App() {
     const rowHeight = 100
     const minColumnWidth = 300
 
+    const [scrollIndicator, setScrollIndicator] = useState({
+        quantity: 0,
+        autoScroll: false,
+    })
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setScrollIndicator((prev) => ({ ...prev, quantity: prev.quantity + 100 }))
+        }, 1000)
+
+        return () => {
+            clearInterval(interval)
+        }
+    }, [])
+
     return (
         <div className='container h-screen mx-auto'>
-            {/* <DynamicSchedule
-                columns={columns}
-                rows={horarios}
-                scheduleItems={scheduleItems}
-                setScheduleItems={setScheduleItems}
-                yAxisLabel='Horarios'
-                rowHeight={100}
-                minColumnWidth={300}
-                linesPerRow={1}
-                headerStyles={{ backgroundColor: '#458fA3' }}
-                ItemComponent={(props) => {
-                    return <div className='bg-red-300 w-full h-full border'></div>
-                }}
-                VoidItemComponent={() => {
-                    return (
-                        <div className='bg-slate-300'>
-                            <p>void</p>
-                        </div>
-                    )
-                }}
-            /> */}
             <DynamicSchedule
+                scrollIndicator={scrollIndicator}
                 firstColumnWidth={firstColumnWidth}
                 headerHeight={headerHeight}
                 rowHeight={rowHeight}

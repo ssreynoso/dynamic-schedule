@@ -48,4 +48,8 @@ export interface DynamicScheduleProps<T> {
     headerHeight: number
     rowHeight: number
     minColumnWidth: number
+    scrollIndicator?: {
+        quantity: number // px
+        autoScroll: boolean
+    }
 }
