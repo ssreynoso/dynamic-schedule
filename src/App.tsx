@@ -85,6 +85,14 @@ function App() {
                 items={scheduleItems}
                 columns={columns}
                 rows={horarios}
+                VoidItemComponent={({ columnId, rowId }) => {
+                    return (
+                        <div className='bg-slate-300 w-full h-full flex items-center justify-center'>
+                            <p>{columnId}</p>
+                            <p>{rowId}</p>
+                        </div>
+                    )
+                }}
                 ScheduleItemComponent={({ original, draggableProps }) => {
                     return (
                         <div className='bg-red-300 w-full h-full border'>

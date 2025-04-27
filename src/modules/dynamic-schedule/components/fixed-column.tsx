@@ -18,7 +18,7 @@ export const DynamicScheduleFixedColumn = (props: DynamicScheduleFixedColumnProp
             id='dynamics-schedule-fixed-column'
             className='sticky left-0 top-0 z-[1] bg-lime-300'
             rowHeight={rowHeight}
-            hearderHeight={headerHeight}
+            headerHeight={headerHeight}
         >
             <DynamicScheduleColumnHeader className='border-none'>{firstColumnText}</DynamicScheduleColumnHeader>
             {rows.map((row, idx) => (

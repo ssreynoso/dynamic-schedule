@@ -4,14 +4,14 @@ import { cn } from '../lib/utils'
 type DynamicScheduleDroppableColumnProps = PropsWithChildren<{
     className?: string
     rowHeight: number
-    hearderHeight: number
+    headerHeight: number
 }>
 
 export const DynamicScheduleDroppableColumn = (props: DynamicScheduleDroppableColumnProps) => {
-    const { className, children, hearderHeight, rowHeight } = props
+    const { className, children, headerHeight, rowHeight } = props
 
     const styles: React.CSSProperties = {
-        gridTemplateRows: hearderHeight,
+        gridTemplateRows: headerHeight,
         gridAutoRows: rowHeight,
     }
 

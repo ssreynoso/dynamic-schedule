@@ -31,12 +31,18 @@ interface ScheduleItemComponentProps<T> {
     }
 }
 
+interface ScheduleVoidItemComponentProps {
+    rowId: Row['id']
+    columnId: Column['id']
+}
+
 export interface DynamicScheduleProps<T> {
     columns: Column[]
     rows: Row[]
     firstColumnText?: string
     items: Item<T>[]
     ScheduleItemComponent: React.FC<ScheduleItemComponentProps<T>>
+    VoidItemComponent?: React.FC<ScheduleVoidItemComponentProps>
     onChange: (input: OnChangeInput<T>) => Promise<void>
     firstColumnWidth: number
     headerHeight: number

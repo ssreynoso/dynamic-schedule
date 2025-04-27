@@ -8,11 +8,11 @@ type DynamicScheduleColumnProps = PropsWithChildren<{
     className?: string
     saveColumnWidth?: boolean
     rowHeight: number
-    hearderHeight: number
+    headerHeight: number
 }>
 
 export const DynamicScheduleColumn = (props: DynamicScheduleColumnProps) => {
-    const { id, className, isLast, children, saveColumnWidth, hearderHeight, rowHeight } = props
+    const { id, className, isLast, children, saveColumnWidth, headerHeight, rowHeight } = props
 
     const columnRef = useRef<HTMLDivElement>(null)
 
@@ -28,7 +28,7 @@ export const DynamicScheduleColumn = (props: DynamicScheduleColumnProps) => {
     }, [id, saveColumnWidth, setColumnWidth])
 
     const styles: React.CSSProperties = {
-        gridTemplateRows: hearderHeight,
+        gridTemplateRows: headerHeight,
         gridAutoRows: rowHeight,
     }
 
