@@ -7,6 +7,7 @@ import { DynamicScheduleDragOverlay } from './drag-overlay'
 import { useContainerDragAndDrop } from '../hooks/use-container-drag-and-drop'
 import { ScrollHandler } from '../hooks/use-scroll-indicator'
 import { DynamicScheduleCurrentLine } from './current-line'
+import { cn } from '../lib/utils'
 
 type DynamicScheduleContainerProps<T> = PropsWithChildren<{
     items: DynamicScheduleProps<T>['items']
@@ -17,10 +18,11 @@ type DynamicScheduleContainerProps<T> = PropsWithChildren<{
     firstColumnWidth: number
     rowHeight: number
     styles?: React.CSSProperties
+    className?: string
 }>
 
 const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<T>) => {
-    const { items, children, columns, rows, rowHeight, firstColumnWidth, styles, onChange } = props
+    const { items, children, columns, rows, rowHeight, firstColumnWidth, styles, onChange, className } = props
 
     const containerRef = useRef<HTMLDivElement>(null)
     const containerId = 'dynamic-schedule-container'
@@ -45,7 +47,7 @@ const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<
                     containerRef.current = node
                 }}
                 id={containerId}
-                className='bg-blue-300 w-full relative h-full grid overflow-x-auto'
+                className={cn('w-full relative h-full grid overflow-x-auto', className)}
                 style={styles}
             >
                 <DynamicScheduleCurrentLine firstColumnWidth={firstColumnWidth} columnsQuantity={columns.length} />

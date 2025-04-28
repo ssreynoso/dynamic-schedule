@@ -114,6 +114,9 @@ function App() {
                 VoidItemComponent={ScheduleVoidItem}
                 ScheduleItemComponent={ScheduleItem}
                 onChange={handleChange}
+                firstColumnText='Horarios'
+                firstColumnClassName='bg-gray-200'
+                headerClassName='bg-gray-200'
             />
         </div>
     )

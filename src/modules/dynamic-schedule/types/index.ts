@@ -56,4 +56,7 @@ export interface DynamicScheduleProps<T> {
     rowHeight: number
     minColumnWidth: number
     scrollIndicator?: ScrollIndicator
+    headerClassName?: string
+    containerClassName?: string
+    firstColumnClassName?: string
 }

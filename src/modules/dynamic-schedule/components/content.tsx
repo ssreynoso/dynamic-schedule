@@ -24,6 +24,9 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
         headerHeight,
         rowHeight,
         minColumnWidth,
+        headerClassName,
+        containerClassName,
+        firstColumnClassName,
     } = props
 
     const isDragging = useDynamicScheduleStore((state) => state.isDragging)
@@ -48,8 +51,16 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
             rows={rows}
             onChange={onChange}
             headerHeight={headerHeight}
+            className={containerClassName}
         >
-            <DynamicScheduleFixedColumn headerHeight={headerHeight} firstColumnText={firstColumnText} rows={rows} rowHeight={rowHeight} />
+            <DynamicScheduleFixedColumn
+                className={firstColumnClassName}
+                headerClassName={headerClassName}
+                headerHeight={headerHeight}
+                firstColumnText={firstColumnText}
+                rows={rows}
+                rowHeight={rowHeight}
+            />
             {columns.map((column, idx) => {
                 const columnItems = itemsByColumn[column.id] || []
                 const coincidences = coincidencesByColumn[column.id]
@@ -80,7 +91,7 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
                                 />
                             )
                         })}
-                        <DynamicScheduleColumnHeader className='bg-amber-50'>{column.label}</DynamicScheduleColumnHeader>
+                        <DynamicScheduleColumnHeader className={headerClassName}>{column.label}</DynamicScheduleColumnHeader>
                         {rows.map((row) => {
                             const key = `void-[${column.id}]-[${row.id}]`
 
@@ -93,6 +104,7 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
                 <DynamicScheduleDroppableSection
                     columns={columns}
                     rows={rows}
+                    firstColumnClassName={firstColumnClassName}
                     firstColumnText={firstColumnText}
                     headerHeight={headerHeight}
                     rowHeight={rowHeight}

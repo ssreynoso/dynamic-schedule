@@ -20,5 +20,14 @@ export const DynamicScheduleDroppableItem = React.memo((props: DroppableItemProp
 
     const isActive = useDynamicScheduleStore(isActiveCalculator)
 
-    return <div className={cn('w-full h-full flex items-center justify-center border', isActive ? 'bg-green-300' : 'bg-blue-300')}>{children}</div>
+    return (
+        <div
+            className={cn(
+                'w-full h-full flex items-center justify-center border transition-colors',
+                isActive ? 'bg-cyan-800/20 backdrop-blur-none' : 'bg-white/20 backdrop-blur-xs'
+            )}
+        >
+            {children}
+        </div>
+    )
 })
