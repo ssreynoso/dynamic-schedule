@@ -5,29 +5,28 @@ import { DndContext } from '@dnd-kit/core'
 import { DynamicScheduleProps } from '../types'
 import { DynamicScheduleDragOverlay } from './drag-overlay'
 import { useContainerDragAndDrop } from '../hooks/use-container-drag-and-drop'
-import { useScrollIndicator } from '../hooks/use-scroll-indicator'
+import { ScrollHandler } from '../hooks/use-scroll-indicator'
+import { DynamicScheduleCurrentLine } from './current-line'
 
 type DynamicScheduleContainerProps<T> = PropsWithChildren<{
     items: DynamicScheduleProps<T>['items']
     rows: DynamicScheduleProps<T>['rows']
     columns: DynamicScheduleProps<T>['columns']
-    scrollIndicator: DynamicScheduleProps<T>['scrollIndicator']
     onChange: DynamicScheduleProps<T>['onChange']
     headerHeight: number
+    firstColumnWidth: number
     rowHeight: number
     styles?: React.CSSProperties
 }>
 
 const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<T>) => {
-    const { items, children, columns, rows, rowHeight, styles, onChange, scrollIndicator } = props
+    const { items, children, columns, rows, rowHeight, firstColumnWidth, styles, onChange } = props
 
     const containerRef = useRef<HTMLDivElement>(null)
     const containerId = 'dynamic-schedule-container'
     const { setNodeRef } = useDroppable({
         id: containerId,
     })
-
-    useScrollIndicator({ containerRef, scrollIndicator })
 
     const { handleDragStart, handleDragMove, handleDragEnd } = useContainerDragAndDrop({
         containerRef,
@@ -49,6 +48,8 @@ const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<
                 className='bg-blue-300 w-full relative h-full grid overflow-x-auto'
                 style={styles}
             >
+                <DynamicScheduleCurrentLine firstColumnWidth={firstColumnWidth} columnsQuantity={columns.length} />
+                <ScrollHandler containerRef={containerRef} />
                 {children}
             </div>
             <DynamicScheduleDragOverlay />
