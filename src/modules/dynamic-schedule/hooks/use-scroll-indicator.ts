@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import { useDynamicScheduleScrollIndicatorStore } from '../stores/dynamic-schedule-scroll-indicator-store'
 
 interface ScrollHandlerProps {
@@ -8,7 +9,7 @@ interface ScrollHandlerProps {
 export const ScrollHandler = (props: ScrollHandlerProps) => {
     const { containerRef } = props
 
-    const scrollIndicator = useDynamicScheduleScrollIndicatorStore((store) => store.scrollIndicator)
+    const scrollIndicator = useDynamicScheduleScrollIndicatorStore(store => store.scrollIndicator)
     const [scrolled, setScrolled] = useState(false)
 
     // console.log('ScrollHandler render')

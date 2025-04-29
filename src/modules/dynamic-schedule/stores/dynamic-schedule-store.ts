@@ -11,7 +11,7 @@ const defaultActiveItem: ActiveItem = {
     id: '',
     colIndex: 0,
     rowIndex: 0,
-    rowSpan: 0,
+    rowSpan: 0
 }
 
 export interface DynamicScheduleStore {
@@ -25,11 +25,11 @@ export interface DynamicScheduleStore {
 
 export const useDynamicScheduleStore = create<DynamicScheduleStore>((set, get) => ({
     columnWidth: null,
-    setColumnWidth: (width) => set(() => ({ columnWidth: width })),
+    setColumnWidth: width => set(() => ({ columnWidth: width })),
     isDragging: false,
-    setIsDragging: (isDragging) => set(() => ({ isDragging })),
+    setIsDragging: isDragging => set(() => ({ isDragging })),
     activeItem: null,
-    setActiveItem: (activeItem) => {
+    setActiveItem: activeItem => {
         const prevItem = get().activeItem
 
         if (!activeItem) {
@@ -38,15 +38,15 @@ export const useDynamicScheduleStore = create<DynamicScheduleStore>((set, get) =
             return
         }
 
-        if (!prevItem) {
-            set(() => ({ activeItem: { ...defaultActiveItem, ...activeItem } }))
-        } else {
+        if (prevItem) {
             set(() => ({
                 activeItem: {
                     ...prevItem,
-                    ...activeItem,
-                },
+                    ...activeItem
+                }
             }))
+        } else {
+            set(() => ({ activeItem: { ...defaultActiveItem, ...activeItem } }))
         }
-    },
+    }
 }))

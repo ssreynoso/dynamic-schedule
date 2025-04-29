@@ -1,4 +1,5 @@
 import { PropsWithChildren } from 'react'
+
 import { cn } from '../lib/utils'
 
 type DynamicScheduleDroppableColumnProps = PropsWithChildren<{
@@ -12,11 +13,11 @@ export const DynamicScheduleDroppableColumn = (props: DynamicScheduleDroppableCo
 
     const styles: React.CSSProperties = {
         gridTemplateRows: headerHeight,
-        gridAutoRows: rowHeight,
+        gridAutoRows: rowHeight
     }
 
     return (
-        <div className={cn('w-full h-full grid grid-cols-1 relative', className)} style={styles}>
+        <div className={cn('relative grid h-full w-full grid-cols-1', className)} style={styles}>
             <div />
             {children}
         </div>

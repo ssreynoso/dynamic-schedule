@@ -81,8 +81,8 @@ function App() {
 
         setScheduleItems((prevItems) => {
             const newItems = [...prevItems]
-
-            items.forEach((item) => {
+            const newScheduleItems = items.map((item) => item.newScheduleItem)
+            newScheduleItems.forEach((item) => {
                 const index = newItems.findIndex((i) => i.id === item.id)
 
                 if (index !== -1) {

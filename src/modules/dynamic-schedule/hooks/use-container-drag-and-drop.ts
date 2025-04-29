@@ -1,7 +1,8 @@
 import { useState } from 'react'
+import { DragMoveEvent, DragStartEvent } from '@dnd-kit/core'
+
 import { useDynamicScheduleStore } from '../stores/dynamic-schedule-store'
 import { DynamicScheduleProps, Item } from '../types'
-import { DragMoveEvent, DragStartEvent } from '@dnd-kit/core'
 
 interface ContainerDragAndDropProps<T> {
     containerRef: React.RefObject<HTMLDivElement | null>
@@ -11,37 +12,41 @@ interface ContainerDragAndDropProps<T> {
     onChange: DynamicScheduleProps<T>['onChange']
     rowHeight: number
     styles?: React.CSSProperties
+    getItemCanDragOnX?: DynamicScheduleProps<T>['getItemCanDragOnX']
 }
 
 export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) => {
-    const { containerRef, items, rows, columns, onChange, rowHeight } = props
+    const { containerRef, items, rows, columns, rowHeight, getItemCanDragOnX, onChange } = props
 
-    const columnWidth = useDynamicScheduleStore((state) => state.columnWidth)
-    const setIsDragging = useDynamicScheduleStore((state) => state.setIsDragging)
-    const setActiveItem = useDynamicScheduleStore((state) => state.setActiveItem)
+    const columnWidth = useDynamicScheduleStore(state => state.columnWidth)
+    const setIsDragging = useDynamicScheduleStore(state => state.setIsDragging)
+    const setActiveItem = useDynamicScheduleStore(state => state.setActiveItem)
 
     const [data, setData] = useState<ActiveItemStartData<T> | null>(null)
 
     const handleDragMove = (event: DragMoveEvent) => {
         if (!data || !containerRef.current) return
 
-        const currentColumn = Math.floor((data.relativeX + event.delta.x) / (columnWidth || 0))
-        const currentRow = Math.floor((data.relativeY + event.delta.y) / rowHeight)
+        // Los delta son los que tengo que limitar segun el tipo de movimiento
+        const deltaX = data.canDragOnX ? event.delta.x : 0
+        const deltaY = data.canDragOnY ? event.delta.y : 0
+        const currentColumn = Math.floor((data.relativeX + deltaX) / (columnWidth || 0))
+        const currentRow = Math.floor((data.relativeY + deltaY) / rowHeight)
 
         setActiveItem({
             id: data.itemToMove.id,
             colIndex: currentColumn,
             rowIndex: currentRow,
-            rowSpan: data.rowSpan,
+            rowSpan: data.rowSpan
         })
     }
 
     const handleDragStart = (event: DragStartEvent) => {
-        const itemToMove = items.find((i) => i.id === event.active.id.toString())
+        const itemToMove = items.find(i => i.id === event.active.id.toString())
 
         if (!itemToMove) return
 
-        const columnIndex = columns.findIndex((c) => c.id === itemToMove.columnId)
+        const columnIndex = columns.findIndex(c => c.id === itemToMove.columnId)
         const column = columnIndex + 1
         const row = itemToMove.rowStart
         const columnInPixels = columnIndex * (columnWidth || 0)
@@ -55,10 +60,12 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
             relativeX: columnInPixels + (columnWidth || 0) / 2,
             relativeY: rowInPixels,
             rowSpan: itemToMove.rowSpan,
+            canDragOnX: getItemCanDragOnX ? getItemCanDragOnX(itemToMove.id) : true,
+            canDragOnY: true
         })
         setActiveItem({
             id: itemToMove.id,
-            rowSpan: itemToMove.rowSpan,
+            rowSpan: itemToMove.rowSpan
         })
         setIsDragging(true)
     }
@@ -69,7 +76,7 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
 
     const finalizeDrag = async () => {
         const activeItem = useDynamicScheduleStore.getState().activeItem
-        const newItem: Item<T> | undefined = items.find((i) => i.id === data?.itemToMove.id)
+        const newItem: Item<T> | undefined = items.find(i => i.id === data?.itemToMove.id)
 
         if (
             !newItem ||
@@ -91,9 +98,22 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
         newItemCopy.rowSpan = activeItem.rowSpan
         newItemCopy.original = data.itemToMove.original
 
-        await onChange({ items: [newItemCopy] })
-
-        close()
+        try {
+            onChange &&
+                (await onChange({
+                    items: [
+                        {
+                            newScheduleItem: newItemCopy,
+                            newColumnId: columns[activeItem.colIndex].id,
+                            newRowId: rows[newItemCopy.rowStart - 1].id
+                        }
+                    ]
+                }))
+        } catch {
+            //
+        } finally {
+            close()
+        }
     }
 
     const close = () => {
@@ -102,13 +122,14 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
     }
 
     return {
+        activeItemData: data,
         handleDragMove,
         handleDragStart,
-        handleDragEnd,
+        handleDragEnd
     }
 }
 
-type ActiveItemStartData<T> = {
+export type ActiveItemStartData<T> = {
     itemToMove: Item<T>
     columnIndex: number
     column: number
@@ -116,4 +137,6 @@ type ActiveItemStartData<T> = {
     rowSpan: number
     relativeX: number
     relativeY: number
+    canDragOnX: boolean
+    canDragOnY: boolean
 }

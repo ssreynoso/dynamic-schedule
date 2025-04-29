@@ -1,4 +1,5 @@
 import React, { PropsWithChildren, useCallback } from 'react'
+
 import { DynamicScheduleStore, useDynamicScheduleStore } from '../stores/dynamic-schedule-store'
 import { cn } from '../lib/utils'
 
@@ -21,13 +22,10 @@ export const DynamicScheduleDroppableItem = React.memo((props: DroppableItemProp
     const isActive = useDynamicScheduleStore(isActiveCalculator)
 
     return (
-        <div
-            className={cn(
-                'w-full h-full flex items-center justify-center border transition-colors',
-                isActive ? 'bg-cyan-800/20 backdrop-blur-none' : 'bg-white/20 backdrop-blur-xs'
-            )}
-        >
+        <div className={cn('h-full w-full transition-colors', isActive ? 'bg-cyan-800/20' : 'bg-white/20')}>
             {children}
         </div>
     )
 })
+
+DynamicScheduleDroppableItem.displayName = 'DynamicScheduleDroppableItem'

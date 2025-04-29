@@ -19,8 +19,12 @@ export interface Item<T> {
     original: T
 }
 
-interface OnChangeInput<T> {
-    items: Item<T>[]
+export interface DynamicScheduleOnChangeCallbackInput<T> {
+    items: {
+        newScheduleItem: Item<T>
+        newColumnId: Column['id']
+        newRowId: Row['id']
+    }[]
 }
 
 export interface ScheduleItemComponentProps<T> {
@@ -32,8 +36,8 @@ export interface ScheduleItemComponentProps<T> {
 }
 
 export interface ScheduleVoidItemComponentProps {
-    rowId: Row['id']
-    columnId: Column['id']
+    row: Row
+    column: Column
 }
 
 export interface ScrollIndicator {
@@ -41,7 +45,7 @@ export interface ScrollIndicator {
     autoScroll: boolean
 }
 
-export type DynamicScheduleOnChangeCallback<T> = (input: OnChangeInput<T>) => Promise<void>
+export type DynamicScheduleOnChangeCallback<T> = (input: DynamicScheduleOnChangeCallbackInput<T>) => Promise<void>
 
 export interface DynamicScheduleProps<T> {
     columns: Column[]
@@ -55,8 +59,10 @@ export interface DynamicScheduleProps<T> {
     headerHeight: number
     rowHeight: number
     minColumnWidth: number
-    scrollIndicator?: ScrollIndicator
+    scrollIndicator?: ScrollIndicator | null
     headerClassName?: string
     containerClassName?: string
     firstColumnClassName?: string
+    currentLineClassName?: string
+    getItemCanDragOnX?: (itemId: Item<T>['id']) => boolean
 }

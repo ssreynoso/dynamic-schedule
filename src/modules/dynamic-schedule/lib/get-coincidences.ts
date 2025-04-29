@@ -11,7 +11,7 @@ export interface ItemCoincidences {
 }
 
 export function getCoincidences<T>(items: DynamicScheduleProps<T>['items']): ItemCoincidences[] {
-    return items.map((currentItem) => {
+    return items.map(currentItem => {
         const start = currentItem.rowStart
         const end = start + currentItem.rowSpan - 1
 
@@ -46,7 +46,7 @@ export function getCoincidences<T>(items: DynamicScheduleProps<T>['items']): Ite
 
         return {
             id: currentItem.id,
-            rows: rowsInfo,
+            rows: rowsInfo
         }
     })
 }

@@ -1,4 +1,5 @@
 import { create } from 'zustand'
+
 import { ScrollIndicator } from '../types'
 
 interface DynamicScheduleScrollIndicatorStore {
@@ -6,7 +7,7 @@ interface DynamicScheduleScrollIndicatorStore {
     setScrollIndicator: (scrollIndicator?: ScrollIndicator) => void
 }
 
-export const useDynamicScheduleScrollIndicatorStore = create<DynamicScheduleScrollIndicatorStore>((set) => ({
+export const useDynamicScheduleScrollIndicatorStore = create<DynamicScheduleScrollIndicatorStore>(set => ({
     scrollIndicator: null,
-    setScrollIndicator: (scrollIndicator) => set(() => ({ scrollIndicator })),
+    setScrollIndicator: scrollIndicator => set(() => ({ scrollIndicator }))
 }))
