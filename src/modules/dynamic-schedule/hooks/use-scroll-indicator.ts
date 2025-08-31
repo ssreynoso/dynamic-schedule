@@ -12,8 +12,6 @@ export const ScrollHandler = (props: ScrollHandlerProps) => {
     const scrollIndicator = useDynamicScheduleScrollIndicatorStore(store => store.scrollIndicator)
     const [scrolled, setScrolled] = useState(false)
 
-    // console.log('ScrollHandler render')
-
     useEffect(() => {
         const canScroll = scrollIndicator?.autoScroll || !scrolled
 

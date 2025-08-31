@@ -18,7 +18,7 @@ export const DynamicScheduleFixedColumn = (props: DynamicScheduleFixedColumnProp
     return (
         <DynamicScheduleColumn
             id='dynamics-schedule-fixed-column'
-            className={cn('sticky left-0 top-0 z-[2]', className)}
+            className={cn('sticky top-0 left-0 z-[2]', className)}
             rowHeight={rowHeight}
             headerHeight={headerHeight}
         >
@@ -27,7 +27,7 @@ export const DynamicScheduleFixedColumn = (props: DynamicScheduleFixedColumnProp
             </DynamicScheduleColumnHeader>
             {rows.map((row, idx) => (
                 <div className='relative flex h-full w-full' key={row.id}>
-                    {idx !== 0 && <span className='absolute right-1 top-0 translate-y-[-50%]'>{row.label}</span>}
+                    {idx !== 0 && <span className='absolute top-0 right-1 translate-y-[-50%]'>{row.label}</span>}
                 </div>
             ))}
         </DynamicScheduleColumn>

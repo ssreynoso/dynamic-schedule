@@ -18,7 +18,7 @@ export const DynamicScheduleColumn = (props: DynamicScheduleColumnProps) => {
 
     const columnRef = useRef<HTMLDivElement>(null)
 
-    const setColumnWidth = useDynamicScheduleStore((state) => state.setColumnWidth)
+    const setColumnWidth = useDynamicScheduleStore(state => state.setColumnWidth)
 
     useEffect(() => {
         if (saveColumnWidth && columnRef.current) {
@@ -31,7 +31,7 @@ export const DynamicScheduleColumn = (props: DynamicScheduleColumnProps) => {
 
     const styles: React.CSSProperties = {
         gridTemplateRows: headerHeight,
-        gridAutoRows: rowHeight,
+        gridAutoRows: rowHeight
     }
 
     return (
