@@ -1,18 +1,21 @@
-import React, { useMemo } from 'react'
+import React, { useEffect, useMemo } from 'react'
 
+import { useCoincidencesByColumn } from '../hooks/use-coincidences-by-column'
+import { useCtrlListener } from '../hooks/use-ctrl-listener'
+import { useEscapeListener } from '../hooks/use-escape-listener'
+import { useItemsByColumn } from '../hooks/use-items-by-column'
+import { useDynamicScheduleSelectedItemsStore } from '../stores/dynamic-schedule-selected-items-store'
 import { useDynamicScheduleStore } from '../stores/dynamic-schedule-store'
 import { DynamicScheduleProps } from '../types'
-import { useCoincidencesByColumn } from '../hooks/use-coincidences-by-column'
-import { useItemsByColumn } from '../hooks/use-items-by-column'
 
 import { DynamicScheduleColumn } from './column'
 import { DynamicScheduleColumnHeader } from './column-header'
 import { DynamicScheduleContainer } from './container'
+import { DynamicScheduleCurrentLine } from './current-line'
 import { DynamicScheduleDroppableSection } from './droppable-section'
 import { DynamicScheduleFixedColumn } from './fixed-column'
 import { DynamicScheduleItem } from './item'
 import { VoidCell } from './void-cell'
-import { DynamicScheduleCurrentLine } from './current-line'
 
 const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
     const {
@@ -35,6 +38,8 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
     } = props
 
     const isDragging = useDynamicScheduleStore(state => state.isDragging)
+    const setCtrlPressed = useDynamicScheduleSelectedItemsStore(state => state.setCtrlPressed)
+    const clearSelectedItems = useDynamicScheduleSelectedItemsStore(state => state.clearSelectedItems)
 
     const styles = useMemo(
         () => ({
@@ -45,6 +50,9 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
 
     const { itemsByColumn } = useItemsByColumn(items)
     const { coincidencesByColumn } = useCoincidencesByColumn(items, columns)
+
+    useCtrlListener({ onCtrl: setCtrlPressed })
+    useEscapeListener({ onEscape: clearSelectedItems })
 
     return (
         <DynamicScheduleContainer

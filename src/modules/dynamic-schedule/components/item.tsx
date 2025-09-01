@@ -1,7 +1,10 @@
 import { useDraggable } from '@dnd-kit/core'
+import { Check, Minus, Plus } from 'lucide-react'
 
+import { useDynamicScheduleItemStyles } from '../hooks/use-dynamic-schedule-item-styles'
 import { ItemCoincidences } from '../lib/get-coincidences'
 import { cn } from '../lib/utils'
+import { useDynamicScheduleSelectedItemsStore } from '../stores/dynamic-schedule-selected-items-store'
 import { DynamicScheduleProps, Item } from '../types'
 
 interface DynamicScheduleAbsoluteProps<T> {
@@ -16,32 +19,47 @@ interface DynamicScheduleAbsoluteProps<T> {
 }
 
 export const DynamicScheduleItem = <T,>(props: DynamicScheduleAbsoluteProps<T>) => {
-    const { item, className, ScheduleItemComponent, rowHeight, rowStart, id, rowSpan, coincidences } = props
+    const { item, className, ScheduleItemComponent, id } = props
+
+    const isCtrlPressed = useDynamicScheduleSelectedItemsStore(state => state.isCtrlPressed)
+    const selectedItems = useDynamicScheduleSelectedItemsStore(state => state.selectedItems)
+    const addSelectedItem = useDynamicScheduleSelectedItemsStore(state => state.addSelectedItem)
+    const removeSelectedItem = useDynamicScheduleSelectedItemsStore(state => state.removeSelectedItem)
 
     const { attributes, listeners, setNodeRef } = useDraggable({
         id
     })
 
-    const firstRowCoincidence = coincidences.rows[0]?.rowStartCoincidences === 0
-
-    const maxCoincidences = Math.max(...coincidences.rows.map(c => c.coincidentItems))
-    const maxOrder = Math.max(...coincidences.rows.map(c => c.order))
-
-    const widthPercent = firstRowCoincidence ? 100 - (maxOrder - 1) * 10 : 100 / (maxCoincidences + 1)
-    const translateX = firstRowCoincidence ? 0 : (maxOrder - 1) * 100
-
-    const styles: React.CSSProperties = {
-        gridRowStart: rowStart + 1,
-        height: `calc(${rowSpan * rowHeight}px - 1px)`,
-        width: `calc(${widthPercent}%)`,
-        transform: `translateX(${translateX}%)`,
-        justifySelf: firstRowCoincidence ? 'flex-end' : undefined
-    }
+    const { styles } = useDynamicScheduleItemStyles(props)
 
     if (!ScheduleItemComponent) return null
 
+    const isSelected = selectedItems.includes(item.id)
+
+    const handleSelectItem = () => {
+        if (isSelected) {
+            removeSelectedItem(item.id)
+        } else {
+            addSelectedItem(item.id)
+        }
+    }
+
     return (
         <div id={id} ref={setNodeRef} className={cn('absolute', className)} style={styles}>
+            {isCtrlPressed && (
+                <div
+                    onClick={handleSelectItem}
+                    className='absolute z-10 flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-blue-500/30 transition-all hover:bg-blue-500/50'
+                >
+                    {isSelected ? <Minus /> : <Plus />}
+                </div>
+            )}
+            {isSelected && (
+                <div className='absolute bottom-1 left-1 rounded-full bg-black p-1 text-white'>
+                    <Check size={16} />
+                </div>
+            )}
+
             <ScheduleItemComponent original={item.original} draggableProps={{ attributes, listeners }} />
         </div>
     )
