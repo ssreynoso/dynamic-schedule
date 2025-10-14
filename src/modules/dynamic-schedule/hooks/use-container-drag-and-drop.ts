@@ -1,5 +1,5 @@
 import { DragMoveEvent, DragStartEvent } from '@dnd-kit/core'
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 
 import { useDynamicScheduleMovementStore } from '../stores/dynamic-schedule-movement-store'
 import { useDynamicScheduleSelectedItemsStore } from '../stores/dynamic-schedule-selected-items-store'
@@ -24,6 +24,7 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
     const setIsDragging = useDynamicScheduleStore(state => state.setIsDragging)
     const setActiveItem = useDynamicScheduleStore(state => state.setActiveItem)
     const selectedItems = useDynamicScheduleSelectedItemsStore(state => state.selectedItems)
+    const clearSelectedItems = useDynamicScheduleSelectedItemsStore(state => state.clearSelectedItems)
     const setDelta = useDynamicScheduleMovementStore(state => state.setDelta)
 
     const [data, setData] = useState<ActiveItemStartData<T> | null>(null)
@@ -82,10 +83,10 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
 
     const finalizeDrag = async () => {
         const activeItem = useDynamicScheduleStore.getState().activeItem
-        const newItem: Item<T> | undefined = items.find(i => i.id === data?.itemToMove.id)
+        const activeItemData: Item<T> | undefined = items.find(i => i.id === data?.itemToMove.id)
 
         if (
-            !newItem ||
+            !activeItemData ||
             !activeItem ||
             !data ||
             activeItem.colIndex < 0 ||
@@ -97,24 +98,62 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
             return
         }
 
-        const newItemCopy = { ...newItem }
+        // Calcular el delta de movimiento del item activo
+        const deltaColumn = activeItem.colIndex - data.columnIndex
+        const deltaRow = activeItem.rowIndex - (data.row - 1)
 
-        newItemCopy.columnId = columns[activeItem.colIndex].id
-        newItemCopy.rowStart = activeItem.rowIndex + 1
-        newItemCopy.rowSpan = activeItem.rowSpan
-        newItemCopy.original = data.itemToMove.original
+        // Obtener los items seleccionados o solo el item activo si no hay selección
+        const selectedItemsArray = Array.from(selectedItems.values())
+        const hasMultipleSelection = selectedItemsArray.length > 1
+
+        const itemsToMove = hasMultipleSelection
+            ? selectedItemsArray.map(selected => items.find(i => i.id === selected.id)).filter((item): item is Item<T> => !!item)
+            : [activeItemData]
+
+        // Crear las nuevas posiciones para cada item
+        const movedItems = itemsToMove.map(item => {
+            const currentColumnIndex = columns.findIndex(c => c.id === item.columnId)
+            const newColumnIndex = currentColumnIndex + deltaColumn
+            const newRowIndex = item.rowStart - 1 + deltaRow
+
+            // Validar que la nueva posición esté dentro de los límites
+            if (
+                newColumnIndex < 0 ||
+                newColumnIndex >= columns.length ||
+                newRowIndex < 0 ||
+                newRowIndex >= rows.length
+            ) {
+                return null
+            }
+
+            const newItemCopy = { ...item }
+            newItemCopy.columnId = columns[newColumnIndex].id
+            newItemCopy.rowStart = newRowIndex + 1
+            newItemCopy.rowSpan = item.rowSpan
+
+            return {
+                newScheduleItem: newItemCopy,
+                newColumnId: columns[newColumnIndex].id,
+                newRowId: rows[newRowIndex].id
+            }
+        }).filter((item): item is NonNullable<typeof item> => item !== null)
+
+        // Si no hay items válidos para mover, cancelar
+        if (movedItems.length === 0) {
+            close()
+            return
+        }
 
         try {
             if (onChange) {
                 await onChange({
-                    items: [
-                        {
-                            newScheduleItem: newItemCopy,
-                            newColumnId: columns[activeItem.colIndex].id,
-                            newRowId: rows[newItemCopy.rowStart - 1].id
-                        }
-                    ]
+                    items: movedItems
                 })
+            }
+
+            // Si hubo multi-selección exitosa, limpiar la selección
+            if (hasMultipleSelection) {
+                clearSelectedItems()
             }
         } catch {
             //
