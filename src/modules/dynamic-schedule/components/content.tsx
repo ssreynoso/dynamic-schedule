@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo } from 'react'
+import React, { useMemo } from 'react'
 
 import { useCoincidencesByColumn } from '../hooks/use-coincidences-by-column'
 import { useCtrlListener } from '../hooks/use-ctrl-listener'

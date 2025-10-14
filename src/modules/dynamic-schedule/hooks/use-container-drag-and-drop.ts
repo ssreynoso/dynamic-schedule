@@ -1,6 +1,8 @@
-import { useState } from 'react'
 import { DragMoveEvent, DragStartEvent } from '@dnd-kit/core'
+import { useEffect, useState } from 'react'
 
+import { useDynamicScheduleMovementStore } from '../stores/dynamic-schedule-movement-store'
+import { useDynamicScheduleSelectedItemsStore } from '../stores/dynamic-schedule-selected-items-store'
 import { useDynamicScheduleStore } from '../stores/dynamic-schedule-store'
 import { DynamicScheduleProps, Item } from '../types'
 
@@ -21,6 +23,8 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
     const columnWidth = useDynamicScheduleStore(state => state.columnWidth)
     const setIsDragging = useDynamicScheduleStore(state => state.setIsDragging)
     const setActiveItem = useDynamicScheduleStore(state => state.setActiveItem)
+    const selectedItems = useDynamicScheduleSelectedItemsStore(state => state.selectedItems)
+    const setDelta = useDynamicScheduleMovementStore(state => state.setDelta)
 
     const [data, setData] = useState<ActiveItemStartData<T> | null>(null)
 
@@ -32,6 +36,8 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
         const deltaY = data.canDragOnY ? event.delta.y : 0
         const currentColumn = Math.floor((data.relativeX + deltaX) / (columnWidth || 0))
         const currentRow = Math.floor((data.relativeY + deltaY) / rowHeight)
+
+        setDelta({ deltaX, deltaY })
 
         setActiveItem({
             id: data.itemToMove.id,
@@ -99,8 +105,8 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
         newItemCopy.original = data.itemToMove.original
 
         try {
-            onChange &&
-                (await onChange({
+            if (onChange) {
+                await onChange({
                     items: [
                         {
                             newScheduleItem: newItemCopy,
@@ -108,7 +114,8 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
                             newRowId: rows[newItemCopy.rowStart - 1].id
                         }
                     ]
-                }))
+                })
+            }
         } catch {
             //
         } finally {
