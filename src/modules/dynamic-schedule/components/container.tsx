@@ -1,10 +1,10 @@
 import { DndContext, useDroppable } from '@dnd-kit/core'
 import React, { PropsWithChildren, useRef } from 'react'
 
-import { DynamicScheduleProps } from '../types'
 import { useContainerDragAndDrop } from '../hooks/use-container-drag-and-drop'
 import { ScrollHandler } from '../hooks/use-scroll-indicator'
 import { cn } from '../lib/utils'
+import { DynamicScheduleProps } from '../types'
 
 import { DynamicScheduleDragOverlay } from './drag-overlay'
 
@@ -56,7 +56,6 @@ const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<
             <div
                 ref={node => {
                     setNodeRef(node)
-                    // @ts-expect-error wanna use ref from useDroppable
                     containerRef.current = node
                 }}
                 id={containerId}

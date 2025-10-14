@@ -1,8 +1,9 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
+
 import { DynamicSchedule } from './modules/dynamic-schedule/components'
 import { DynamicScheduleOnChangeCallback } from './modules/dynamic-schedule/types'
-import { ScheduleVoidItem } from './schedule-void-item'
 import { ScheduleItem } from './schedule-item'
+import { ScheduleVoidItem } from './schedule-void-item'
 
 function App() {
     const columns = useMemo(() => {
@@ -13,7 +14,7 @@ function App() {
             { id: '4', label: 'Columna 4' },
             { id: '5', label: 'Columna 5' },
             { id: '6', label: 'Columna 6' },
-            { id: '7', label: 'Columna 7' },
+            { id: '7', label: 'Columna 7' }
         ]
     }, [])
 
@@ -42,18 +43,18 @@ function App() {
             { id: '20', label: '20:00' },
             { id: '21', label: '21:00' },
             { id: '22', label: '22:00' },
-            { id: '23', label: '23:00' },
+            { id: '23', label: '23:00' }
         ]
     }, [])
 
     const [scheduleItems, setScheduleItems] = useState([
-        { id: '0', columnId: '1', rowStart: 1, rowSpan: 2, original: { name: '1' } },
-        { id: '3', columnId: '1', rowStart: 1, rowSpan: 2, original: { name: '2' } },
-        { id: '4', columnId: '1', rowStart: 2, rowSpan: 5, original: { name: '3' } },
-        { id: '5', columnId: '1', rowStart: 3, rowSpan: 2, original: { name: '4' } },
-        { id: '6', columnId: '1', rowStart: 2, rowSpan: 4, original: { name: '5' } },
-        { id: '1', columnId: '2', rowStart: 2, rowSpan: 2, original: { name: '6' } },
-        { id: '2', columnId: '3', rowStart: 3, rowSpan: 3, original: { name: '7' } },
+        { id: '1', columnId: '1', rowStart: 1, rowSpan: 2, original: { name: '1' } },
+        { id: '2', columnId: '1', rowStart: 1, rowSpan: 2, original: { name: '2' } },
+        { id: '3', columnId: '1', rowStart: 2, rowSpan: 5, original: { name: '3' } },
+        { id: '4', columnId: '1', rowStart: 3, rowSpan: 2, original: { name: '4' } },
+        { id: '5', columnId: '1', rowStart: 2, rowSpan: 4, original: { name: '5' } },
+        { id: '6', columnId: '2', rowStart: 2, rowSpan: 2, original: { name: '6' } },
+        { id: '7', columnId: '3', rowStart: 3, rowSpan: 3, original: { name: '7' } }
     ])
 
     const firstColumnWidth = 64
@@ -63,12 +64,12 @@ function App() {
 
     const [scrollIndicator, setScrollIndicator] = useState({
         quantity: 0,
-        autoScroll: false,
+        autoScroll: false
     })
 
     useEffect(() => {
         const interval = setInterval(() => {
-            setScrollIndicator((prev) => ({ ...prev, quantity: prev.quantity + 2 }))
+            setScrollIndicator(prev => ({ ...prev, quantity: prev.quantity + 2 }))
         }, 1000)
 
         return () => {
@@ -77,13 +78,11 @@ function App() {
     }, [])
 
     const handleChange = useCallback<DynamicScheduleOnChangeCallback<{ name: string }>>(({ items }) => {
-        console.log('items', items)
-
-        setScheduleItems((prevItems) => {
+        setScheduleItems(prevItems => {
             const newItems = [...prevItems]
-            const newScheduleItems = items.map((item) => item.newScheduleItem)
-            newScheduleItems.forEach((item) => {
-                const index = newItems.findIndex((i) => i.id === item.id)
+            const newScheduleItems = items.map(item => item.newScheduleItem)
+            newScheduleItems.forEach(item => {
+                const index = newItems.findIndex(i => i.id === item.id)
 
                 if (index !== -1) {
                     newItems[index] = item
@@ -95,13 +94,13 @@ function App() {
             return newItems
         })
 
-        const promise = new Promise<void>((resolve) => setTimeout(resolve, 0))
+        const promise = new Promise<void>(resolve => setTimeout(resolve, 0))
 
         return promise
     }, [])
 
     return (
-        <div className='container h-screen mx-auto'>
+        <div className='container mx-auto h-screen'>
             <DynamicSchedule
                 scrollIndicator={scrollIndicator}
                 firstColumnWidth={firstColumnWidth}
