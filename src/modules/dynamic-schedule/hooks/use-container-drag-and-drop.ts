@@ -72,6 +72,8 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
         })
         setActiveItem({
             id: itemToMove.id,
+            colIndex: columnIndex,
+            rowIndex: itemToMove.rowStart - 1,
             rowSpan: itemToMove.rowSpan
         })
         setIsDragging(true)
@@ -101,6 +103,12 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
         // Calcular el delta de movimiento del item activo
         const deltaColumn = activeItem.colIndex - data.columnIndex
         const deltaRow = activeItem.rowIndex - (data.row - 1)
+
+        // Si no hubo movimiento, cancelar sin ejecutar onChange
+        if (deltaColumn === 0 && deltaRow === 0) {
+            close()
+            return
+        }
 
         // Obtener los items seleccionados o solo el item activo si no hay selección
         const selectedItemsArray = Array.from(selectedItems.values())
