@@ -51,20 +51,22 @@ export const DynamicScheduleDragOverlay = <T,>(props: DynamicScheduleDragOverlay
                         if (item.id === activeItemData.itemToMove.id) return null
 
                         // Calculate position relative to active item
-                        const { top: relativeTop, left: relativeLeft } = activeItemRect && item.rect
-                            ? calculateRelativePosition({ targetRect: item.rect, baseRect: activeItemRect })
-                            : { top: 0, left: 0 }
+                        const { top: relativeTop, left: relativeLeft } =
+                            activeItemRect && item.rect
+                                ? calculateRelativePosition({ targetRect: item.rect, baseRect: activeItemRect })
+                                : { top: 0, left: 0 }
 
                         const itemStyles: React.CSSProperties = {
                             position: 'absolute',
                             width: item.rect?.width || columnWidth || DEFAULT_COLUMN_WIDTH,
                             height: item.rect?.height || DEFAULT_ROW_HEIGHT,
                             top: relativeTop,
-                            left: relativeLeft
+                            left: relativeLeft,
+                            opacity: DRAG_OVERLAY_SECONDARY_OPACITY
                         }
 
                         return (
-                            <div key={item.id} style={itemStyles} className={`opacity-${DRAG_OVERLAY_SECONDARY_OPACITY * 100}`}>
+                            <div key={item.id} style={itemStyles}>
                                 <ScheduleItemComponent original={item.original as T} />
                             </div>
                         )
