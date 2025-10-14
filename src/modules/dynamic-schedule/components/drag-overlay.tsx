@@ -32,33 +32,46 @@ export const DynamicScheduleDragOverlay = <T,>(props: DynamicScheduleDragOverlay
 
     if (!ScheduleItemComponent) return null
 
-    console.log({ selectedItems })
+    // Convertir el Map a array para poder usar .map()
+    const selectedItemsArray = Array.from(selectedItems.values())
+
+    // Obtener el rect del item activo para calcular posiciones relativas
+    const activeItemRect = selectedItemsArray.find(item => item.id === activeItemData?.itemToMove.id)?.rect
 
     return (
         <DragOverlay dropAnimation={null} modifiers={modifiers}>
             {activeItem && activeItemData ? (
                 <div className='relative h-full' style={{ width: columnWidth || 300 }}>
+                    {/* Item principal que se está arrastrando */}
                     <ScheduleItemComponent original={activeItemData.itemToMove.original} />
-                    <>
-                        {selectedItems.forEach(item => {
-                            console.log({ item })
-                            if (item.id === activeItemData.itemToMove.id) return null
 
-                            const itemStyles: React.CSSProperties = {
-                                // position: 'absolute',
-                                width: item.rect?.width || columnWidth || 300,
-                                height: item.rect?.height || 50,
-                                top: item.rect?.top || 0,
-                                left: item.rect?.left || 0
-                            }
+                    {/* Items seleccionados adicionales */}
+                    {selectedItemsArray.map(item => {
+                        // No renderizar el item activo dos veces
+                        if (item.id === activeItemData.itemToMove.id) return null
 
-                            return (
-                                <div key={item.id} style={itemStyles} className='opacity-50'>
-                                    <ScheduleItemComponent original={item.original as T} />
-                                </div>
-                            )
-                        })}
-                    </>
+                        // Calcular posición relativa al item activo
+                        const relativeTop = activeItemRect && item.rect
+                            ? item.rect.top - activeItemRect.top
+                            : 0
+                        const relativeLeft = activeItemRect && item.rect
+                            ? item.rect.left - activeItemRect.left
+                            : 0
+
+                        const itemStyles: React.CSSProperties = {
+                            position: 'absolute',
+                            width: item.rect?.width || columnWidth || 300,
+                            height: item.rect?.height || 50,
+                            top: relativeTop,
+                            left: relativeLeft
+                        }
+
+                        return (
+                            <div key={item.id} style={itemStyles} className='opacity-70'>
+                                <ScheduleItemComponent original={item.original as T} />
+                            </div>
+                        )
+                    })}
                 </div>
             ) : null}
         </DragOverlay>
