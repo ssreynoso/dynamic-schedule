@@ -3,6 +3,9 @@ import { restrictToHorizontalAxis, restrictToVerticalAxis } from '@dnd-kit/modif
 import { useMemo } from 'react'
 
 import { ActiveItemStartData } from '../hooks/use-container-drag-and-drop'
+import { calculateRelativePosition } from '../lib/calculations'
+import { DEFAULT_COLUMN_WIDTH, DEFAULT_ROW_HEIGHT, DRAG_OVERLAY_SECONDARY_OPACITY } from '../lib/constants'
+import { mapToArray } from '../lib/utils'
 import { useDynamicScheduleSelectedItemsStore } from '../stores/dynamic-schedule-selected-items-store'
 import { useDynamicScheduleStore } from '../stores/dynamic-schedule-store'
 import { DynamicScheduleProps } from '../types'
@@ -32,42 +35,38 @@ export const DynamicScheduleDragOverlay = <T,>(props: DynamicScheduleDragOverlay
 
     if (!ScheduleItemComponent) return null
 
-    // Convertir el Map a array para poder usar .map()
-    const selectedItemsArray = Array.from(selectedItems.values())
-
-    // Obtener el rect del item activo para calcular posiciones relativas
+    const selectedItemsArray = mapToArray(selectedItems)
     const activeItemRect = selectedItemsArray.find(item => item.id === activeItemData?.itemToMove.id)?.rect
 
     return (
         <DragOverlay dropAnimation={null} modifiers={modifiers}>
             {activeItem && activeItemData ? (
-                <div className='relative h-full' style={{ width: columnWidth || 300 }}>
-                    {/* Item principal que se está arrastrando */}
+                <div className='relative h-full' style={{ width: columnWidth || DEFAULT_COLUMN_WIDTH }}>
+                    {/* Primary item being dragged */}
                     <ScheduleItemComponent original={activeItemData.itemToMove.original} />
 
-                    {/* Items seleccionados adicionales */}
+                    {/* Additional selected items in multi-drag */}
                     {selectedItemsArray.map(item => {
-                        // No renderizar el item activo dos veces
+                        // Don't render the active item twice
                         if (item.id === activeItemData.itemToMove.id) return null
 
-                        // Calcular posición relativa al item activo
-                        const relativeTop = activeItemRect && item.rect
-                            ? item.rect.top - activeItemRect.top
-                            : 0
-                        const relativeLeft = activeItemRect && item.rect
-                            ? item.rect.left - activeItemRect.left
-                            : 0
+                        // Calculate position relative to active item
+                        const { top: relativeTop, left: relativeLeft } =
+                            activeItemRect && item.rect
+                                ? calculateRelativePosition({ targetRect: item.rect, baseRect: activeItemRect })
+                                : { top: 0, left: 0 }
 
                         const itemStyles: React.CSSProperties = {
                             position: 'absolute',
-                            width: item.rect?.width || columnWidth || 300,
-                            height: item.rect?.height || 50,
+                            width: item.rect?.width || columnWidth || DEFAULT_COLUMN_WIDTH,
+                            height: item.rect?.height || DEFAULT_ROW_HEIGHT,
                             top: relativeTop,
-                            left: relativeLeft
+                            left: relativeLeft,
+                            opacity: DRAG_OVERLAY_SECONDARY_OPACITY
                         }
 
                         return (
-                            <div key={item.id} style={itemStyles} className='opacity-70'>
+                            <div key={item.id} style={itemStyles}>
                                 <ScheduleItemComponent original={item.original as T} />
                             </div>
                         )
