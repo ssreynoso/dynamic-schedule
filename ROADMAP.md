@@ -4,30 +4,31 @@ Este documento describe las mejoras y próximos pasos para convertir Dynamic Sch
 
 ## 1. Testing
 
-### Unit Tests
-- **Framework**: Vitest (ya integrado con Vite)
-- **Testing Library**: React Testing Library para componentes
-- **Cobertura objetivo**: 80%+
+### Unit Tests ✅
+- ✅ **Framework**: Vitest configurado
+- ✅ **Testing Library**: React Testing Library instalada
+- ✅ **Coverage reporting**: Configurado con v8
+- ✅ Tests de funciones de cálculo (calculations.ts) - 38 tests
+- ✅ Tests de hooks (useCtrlListener, useEscapeListener, useItemsByColumn) - 20 tests
+- ✅ Tests de utilidades (utils.ts) - 20 tests
+- **Total: 78 tests pasando**
 
-#### Tests prioritarios
-- ✅ Drag & drop de items individuales
-- ✅ Multi-selección y drag múltiple
-- ✅ Validaciones de límites (boundaries)
-- ✅ Cálculo de deltas y posiciones
-- ✅ Auto-deselección después de drag
-- ✅ Comportamiento con `getItemCanDragOnX`
-- ✅ Manejo de errores en `onChange`
+### Próximos tests a implementar
+- [ ] Tests de drag & drop de items individuales
+- [ ] Tests de multi-selección y drag múltiple
+- [ ] Tests de stores (Zustand)
+- [ ] Tests de componentes complejos (Container, Content, Item)
 
 ### Integration Tests
-- Flujos completos de usuario
-- Interacción entre múltiples componentes
-- Estados complejos (multi-drag con restricciones)
+- [ ] Flujos completos de usuario
+- [ ] Interacción entre múltiples componentes
+- [ ] Estados complejos (multi-drag con restricciones)
 
 ### E2E Tests
-- **Framework**: Playwright o Cypress
-- Casos de uso reales
-- Drag and drop visual
-- Multi-browser testing
+- [ ] **Framework**: Playwright o Cypress
+- [ ] Casos de uso reales
+- [ ] Drag and drop visual
+- [ ] Multi-browser testing
 
 ## 2. Storybook
 
@@ -149,17 +150,7 @@ Este documento describe las mejoras y próximos pasos para convertir Dynamic Sch
 - [ ] PR checks automáticos
 - [ ] Code coverage reporting
 
-## 5. Refactoring Inmediato
-
-### Organización del código
-- [ ] Separar lógica de cálculo en `lib/calculations.ts`:
-  - `calculateItemPosition()`
-  - `calculateDelta()`
-  - `validateBoundaries()`
-  - `getRelativePosition()`
-- [ ] Extraer constantes a `lib/constants.ts`
-- [ ] Utils para manejo de Map/Set
-- [ ] Tipos en archivos separados si crecen
+## 5. Limpieza de código
 
 ### Limpieza
 - [ ] Eliminar console.logs
@@ -200,25 +191,43 @@ Este documento describe las mejoras y próximos pasos para convertir Dynamic Sch
 
 ## Priorización sugerida
 
-### Fase 1 - Foundations (Sprint 1-2)
-1. Setup de testing básico
-2. Refactoring inmediato
-3. Configuración de package
+### ✅ Completado
+- ✅ Refactoring inicial (lib/calculations.ts, lib/constants.ts, lib/utils.ts)
+- ✅ Multi-selección implementada
+- ✅ Mejoras en drag & drop
+- ✅ Testing setup (Vitest + React Testing Library)
+- ✅ 78 unit tests implementados
+- ✅ Coverage reporting configurado
 
-### Fase 2 - Quality (Sprint 3-4)
-1. Tests completos
-2. Setup de Storybook
-3. CI/CD básico
+### 🎯 Próximos pasos recomendados
 
-### Fase 3 - Enhancement (Sprint 5-6)
-1. Accesibilidad
-2. Performance optimizations
-3. Features adicionales prioritarios
+#### Opción A: Testing (Fundaciones sólidas)
+**Por qué**: Garantiza calidad y previene regresiones
+1. Setup de Vitest y React Testing Library
+2. Tests unitarios de funciones de cálculo (calculations.ts)
+3. Tests de hooks principales
+4. Tests de componentes críticos
 
-### Fase 4 - Polish (Sprint 7+)
-1. Documentación completa
-2. Examples y playground
-3. First npm release!
+#### Opción B: Storybook (Documentación visual)
+**Por qué**: Facilita el desarrollo y muestra el componente en acción
+1. Setup de Storybook con Vite y Tailwind
+2. Stories básicas (Basic, Multi-column, Custom components)
+3. Stories avanzadas (Multi-selection, Restricted drag, Scroll indicators)
+4. Documentación MDX
+
+#### Opción C: Package Setup (Preparación para publicar)
+**Por qué**: Prepara el componente para ser distribuido
+1. Configuración de Vite library mode
+2. Setup de exports en package.json
+3. Documentación (README, CHANGELOG, CONTRIBUTING)
+4. Configuración básica de CI/CD
+
+#### Opción D: Features adicionales (Mejoras funcionales)
+**Por qué**: Añade capacidades que pueden ser críticas para usuarios
+1. Accesibilidad básica (keyboard navigation)
+2. Callbacks extendidos (onDragStart, onDragMove, onDragEnd)
+3. Touch support mejorado
+4. Animaciones suaves
 
 ---
 
