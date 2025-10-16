@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useEscapeListener } from './use-escape-listener';
+import { useEscapeListener } from '../../hooks/use-escape-listener';
 
 describe('useEscapeListener', () => {
   let onEscape: ReturnType<typeof vi.fn>;

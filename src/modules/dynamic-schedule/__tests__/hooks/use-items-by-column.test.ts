@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useItemsByColumn } from './use-items-by-column';
-import type { Item } from '../types';
+import { useItemsByColumn } from '../../hooks/use-items-by-column';
+import type { Item } from '../../types';
 
 interface TestData {
   id: string;

@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { renderHook } from '@testing-library/react';
-import { useCtrlListener } from './use-ctrl-listener';
+import { useCtrlListener } from '../../hooks/use-ctrl-listener';
 
 describe('useCtrlListener', () => {
   let onCtrl: ReturnType<typeof vi.fn>;

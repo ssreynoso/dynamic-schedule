@@ -6,8 +6,8 @@ import {
   validatePositionBounds,
   calculateRelativePosition,
   hasMovement,
-} from './calculations';
-import type { Column, Row } from '../types';
+} from '../../lib/calculations';
+import type { Column, Row } from '../../types';
 
 describe('calculations', () => {
   describe('calculatePixelPosition', () => {

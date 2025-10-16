@@ -747,9 +747,3 @@ pnpm test:ui           # Interfaz visual
 pnpm test:run          # CI/CD
 pnpm test:coverage     # Ver cobertura
 ```
-
----
-
-**¿Preguntas? ¿Algo que agregar?**
-
-Este documento es una referencia completa. Siéntete libre de modificarlo según tu experiencia y aprendizajes.

@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { cn, generateUUID, mapToArray } from './utils';
+import { cn, generateUUID, mapToArray } from '../../lib/utils';
 
 describe('utils', () => {
   describe('cn', () => {
