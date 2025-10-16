@@ -1,7 +1,7 @@
-import { ItemCoincidences } from "../lib/get-coincidences"
+import { ItemCoincidences } from '../lib/get-coincidences'
 
 interface Props {
-        rowStart: number
+    rowStart: number
     rowSpan: number
     rowHeight: number
     coincidences: ItemCoincidences
@@ -26,5 +26,4 @@ export const useDynamicScheduleItemStyles = (props: Props) => {
     }
 
     return { styles }
-
 }

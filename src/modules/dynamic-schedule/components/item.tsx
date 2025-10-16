@@ -26,7 +26,7 @@ export const DynamicScheduleItem = <T,>(props: DynamicScheduleAbsoluteProps<T>) 
     const addSelectedItem = useDynamicScheduleSelectedItemsStore(state => state.addSelectedItem)
     const removeSelectedItem = useDynamicScheduleSelectedItemsStore(state => state.removeSelectedItem)
 
-    const { attributes, listeners, setNodeRef } = useDraggable({
+    const { attributes, listeners, setNodeRef, node } = useDraggable({
         id
     })
 
@@ -34,13 +34,13 @@ export const DynamicScheduleItem = <T,>(props: DynamicScheduleAbsoluteProps<T>) 
 
     if (!ScheduleItemComponent) return null
 
-    const isSelected = selectedItems.includes(item.id)
+    const isSelected = selectedItems.has(item.id)
 
     const handleSelectItem = () => {
         if (isSelected) {
-            removeSelectedItem(item.id)
+            removeSelectedItem({ id: item.id })
         } else {
-            addSelectedItem(item.id)
+            addSelectedItem({ id: item.id, rect: node.current?.getBoundingClientRect(), original: item.original })
         }
     }
 

@@ -1,0 +1,51 @@
+# Source files
+src/
+!src/modules/dynamic-schedule/
+
+# Development files
+.vscode/
+.idea/
+*.log
+*.tmp
+
+# Testing
+coverage/
+*.test.ts
+*.test.tsx
+**/__tests__/
+vitest.config.ts
+src/test/
+
+# Build config
+vite.config.ts
+tsconfig*.json
+.eslintrc*
+.prettierrc*
+eslint.config.js
+
+# Documentation (keep only README in package)
+docs/
+CLAUDE.md
+
+# Git
+.git/
+.gitignore
+
+# Development
+node_modules/
+.env*
+.DS_Store
+
+# CI/CD
+.github/
+.gitlab-ci.yml
+.travis.yml
+
+# HTML demo files
+index.html
+public/
+
+# App specific files (not part of library)
+src/App.tsx
+src/main.tsx
+src/index.css
