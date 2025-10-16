@@ -54,7 +54,7 @@ export interface DynamicScheduleProps<T> {
     items: Item<T>[]
     ScheduleItemComponent: React.FC<ScheduleItemComponentProps<T>> | null
     VoidItemComponent?: React.FC<ScheduleVoidItemComponentProps>
-    onChange: DynamicScheduleOnChangeCallback<T> | null
+    onChange?: DynamicScheduleOnChangeCallback<T> | null
     firstColumnWidth: number
     headerHeight: number
     rowHeight: number

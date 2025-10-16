@@ -200,13 +200,13 @@ function App() {
 | `columns` | `Column[]` | Array de columnas del schedule |
 | `rows` | `Row[]` | Array de filas del schedule |
 | `items` | `Item<T>[]` | Array de items a mostrar |
-| `onChange` | `(data) => void` | Callback cuando los items cambian (drag & drop) |
 | `ScheduleItemComponent` | `Component` | Componente para renderizar cada item |
 
 #### Props Opcionales
 
 | Prop | Tipo | Default | Descripción |
 |------|------|---------|-------------|
+| `onChange` | `(data) => void` | - | Callback cuando los items cambian (drag & drop). Si no se proporciona, el componente funcionará en modo solo lectura |
 | `ScheduleVoidItemComponent` | `Component` | - | Componente para celdas vacías (clickeables) |
 | `scrollIndicator` | `ScrollIndicator` | - | Configuración del indicador de scroll |
 | `headerHeight` | `number` | `48` | Altura del header en pixels |
@@ -470,7 +470,8 @@ MIT
 
 ## Autor
 
-Your Name
+Santiago Reynoso (@ssreynoso)
+https://github.com/ssreynoso
 
 ## Contribuir
 

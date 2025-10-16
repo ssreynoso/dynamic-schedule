@@ -1,10 +1,18 @@
 {
     "name": "dynamic-schedule",
-    "version": "0.1.0",
+    "version": "1.0.0",
     "type": "module",
     "description": "A dynamic schedule component library for React with drag & drop functionality",
-    "author": "Your Name",
+    "author": "Santiago Reynoso <s.reynosodunjo@gmail.com> (https://github.com/ssreynoso)",
     "license": "MIT",
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/ssreynoso/dynamic-schedule.git"
+    },
+    "bugs": {
+        "url": "https://github.com/ssreynoso/dynamic-schedule/issues"
+    },
+    "homepage": "https://github.com/ssreynoso/dynamic-schedule#readme",
     "keywords": [
         "react",
         "schedule",
