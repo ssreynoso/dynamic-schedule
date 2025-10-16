@@ -1,0 +1,12 @@
+{
+  "extends": "./tsconfig.app.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "declaration": true,
+    "declarationMap": true,
+    "emitDeclarationOnly": true,
+    "outDir": "./dist/types"
+  },
+  "include": ["src/modules/dynamic-schedule/**/*"],
+  "exclude": ["**/*.test.ts", "**/*.test.tsx", "src/test/**/*"]
+}
