@@ -1,3 +1,6 @@
+// Styles
+import './styles.css'
+
 // Main component
 export { DynamicSchedule } from './components/index'
 

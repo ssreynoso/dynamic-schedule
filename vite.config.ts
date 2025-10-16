@@ -3,6 +3,7 @@ import { resolve } from 'path'
 import react from '@vitejs/plugin-react-swc'
 import tailwindcss from '@tailwindcss/vite'
 import dts from 'vite-plugin-dts'
+import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
 // https://vite.dev/config/
 export default defineConfig({
@@ -12,6 +13,7 @@ export default defineConfig({
     plugins: [
         react(),
         tailwindcss(),
+        cssInjectedByJsPlugin(),
         dts({
             include: ['src/modules/dynamic-schedule/**/*'],
             exclude: ['**/*.test.ts', '**/*.test.tsx', '**/__tests__/**'],

@@ -1,140 +1,228 @@
 # Dynamic Schedule
 
-A dynamic schedule component library for React with drag & drop functionality.
+Una biblioteca de componentes React para crear horarios dinámicos con funcionalidad drag & drop.
 
-## Features
+## Características
 
-- Generic type support for flexible data models
-- Drag & drop functionality powered by @dnd-kit
-- Customizable styling with Tailwind CSS
-- Scroll indicators with auto-scroll support
-- Multi-selection support
-- Keyboard shortcuts (Ctrl for multi-select, Escape to clear)
-- TypeScript support with full type definitions
+- Soporte para tipos genéricos para modelos de datos flexibles
+- Funcionalidad drag & drop con @dnd-kit
+- Estilos personalizables con Tailwind CSS
+- Indicadores de scroll con soporte de auto-scroll
+- Soporte de multi-selección
+- Atajos de teclado (Ctrl para multi-selección, Escape para limpiar)
+- Soporte completo de TypeScript con definiciones de tipos
 
-## Installation
+## Instalación
 
 ```bash
 npm install dynamic-schedule
-# or
+# o
 pnpm add dynamic-schedule
-# or
+# o
 yarn add dynamic-schedule
 ```
 
-### Peer Dependencies
+### Dependencias Peer
 
-This library requires the following peer dependencies to be installed in your project:
+Este paquete requiere que instales las siguientes dependencias en tu proyecto:
 
 ```bash
-npm install react react-dom @dnd-kit/core @dnd-kit/modifiers zustand clsx lucide-react
+npm install react react-dom @dnd-kit/core @dnd-kit/modifiers zustand clsx lucide-react tailwindcss
 ```
 
-## Basic Usage
+O con pnpm:
+
+```bash
+pnpm add react react-dom @dnd-kit/core @dnd-kit/modifiers zustand clsx lucide-react tailwindcss
+```
+
+#### Versiones Compatibles
+
+- `react`: ^18.0.0 || ^19.0.0
+- `react-dom`: ^18.0.0 || ^19.0.0
+- `@dnd-kit/core`: ^6.0.0
+- `@dnd-kit/modifiers`: ^7.0.0 || ^8.0.0 || ^9.0.0
+- `zustand`: ^4.0.0 || ^5.0.0
+- `clsx`: ^2.0.0
+- `lucide-react`: ^0.400.0
+- `tailwindcss`: ^4.0.0
+
+## Configuración de Tailwind CSS
+
+### ¿Por qué necesito configurar Tailwind en mi proyecto?
+
+Este paquete utiliza clases de Tailwind CSS para sus estilos. Sin embargo, **el paquete NO incluye Tailwind CSS compilado** por las siguientes razones:
+
+1. **Tailwind es una peerDependency**: El paquete declara Tailwind como dependencia peer, lo que significa que tu proyecto es responsable de proporcionar Tailwind CSS.
+
+2. **Las clases de Tailwind están en el código distribuido**: El paquete contiene clases de Tailwind en su código JavaScript (como `className="flex items-center justify-center"`), pero estas clases solo son nombres de clases en texto - no tienen estilos asociados hasta que Tailwind las procesa.
+
+3. **Tailwind funciona con purging/tree-shaking**: Tailwind CSS v4 analiza tu código y genera solo los estilos CSS para las clases que realmente usas. Por eso necesitas decirle a Tailwind dónde buscar estas clases.
+
+### Configuración Paso a Paso
+
+#### 1. Instalar Tailwind CSS en tu proyecto
+
+```bash
+npm install -D tailwindcss @tailwindcss/vite
+```
+
+#### 2. Configurar tu `tailwind.config.ts` (o `.js`)
+
+**IMPORTANTE**: Debes agregar la ruta del paquete `dynamic-schedule` en el array `content`:
+
+```typescript
+import type { Config } from "tailwindcss";
+
+export default {
+  content: [
+    "./index.html",
+    "./src/**/*.{js,ts,jsx,tsx}",
+    // CRUCIAL: Incluir el paquete dynamic-schedule para que Tailwind detecte sus clases
+    "./node_modules/dynamic-schedule/dist/**/*.{js,ts,jsx,tsx}",
+  ],
+} satisfies Config;
+```
+
+**¿Por qué esta línea es necesaria?**
+
+La línea `"./node_modules/dynamic-schedule/dist/**/*.{js,ts,jsx,tsx}"` le dice a Tailwind:
+
+> "Escanea el código del paquete dynamic-schedule y genera los estilos CSS para todas las clases de Tailwind que encuentres ahí"
+
+Sin esta configuración, Tailwind ignorará el paquete y las clases usadas por los componentes no tendrán estilos, resultando en componentes que se ven rotos o sin estilos.
+
+#### 3. Agregar el plugin de Tailwind a Vite
+
+En tu `vite.config.ts`:
+
+```typescript
+import { defineConfig } from 'vite'
+import react from '@vitejs/plugin-react'
+import tailwindcss from '@tailwindcss/vite'
+
+export default defineConfig({
+  plugins: [
+    react(),
+    tailwindcss(), // Plugin de Tailwind CSS v4
+  ],
+})
+```
+
+#### 4. NO necesitas importar CSS de Tailwind
+
+Con Tailwind CSS v4 y el plugin de Vite, **NO necesitas** agregar imports como:
+
+```css
+/* NO necesario con Tailwind v4 + @tailwindcss/vite */
+@import "tailwindcss";
+```
+
+El plugin maneja automáticamente la inyección de estilos.
+
+### ¿Por qué no hay un import de estilos en el paquete?
+
+A diferencia de muchas bibliotecas tradicionales que requieren `import 'library/styles.css'`, este paquete funciona de manera diferente:
+
+- **Las clases están en el código JavaScript**: Cuando se construye el paquete, el código resultante contiene las clases de Tailwind como strings de texto en los atributos `className`.
+- **Tailwind en tu proyecto genera los estilos**: Tu configuración de Tailwind escanea estos strings y genera automáticamente el CSS necesario.
+- **Sin duplicación**: Esto evita que tengas CSS duplicado si tu proyecto también usa Tailwind.
+- **Personalización unificada**: Puedes personalizar el theme de Tailwind y los componentes de este paquete heredarán esos cambios.
+
+## Uso Básico
 
 ```tsx
 import { DynamicSchedule } from 'dynamic-schedule'
 import type { Column, Row, Item } from 'dynamic-schedule'
 
-// Import styles
-import 'dynamic-schedule/styles'
-
-// Define your data type
 interface MyData {
+  id: string
   title: string
   description: string
 }
 
-// Define your columns and rows
-const columns: Column[] = [
-  { id: '1', label: 'Monday' },
-  { id: '2', label: 'Tuesday' },
-  { id: '3', label: 'Wednesday' },
-]
-
-const rows: Row[] = [
-  { id: '1', label: '9:00 AM' },
-  { id: '2', label: '10:00 AM' },
-  { id: '3', label: '11:00 AM' },
-]
-
-// Define your items
-const items: Item<MyData>[] = [
-  {
-    id: '1',
-    columnId: '1',
-    rowStart: 0,
-    rowSpan: 2,
-    original: {
-      title: 'Meeting',
-      description: 'Team standup',
-    },
-  },
-]
-
-// Create a custom item component
-const ScheduleItemComponent = ({ original, draggableProps }) => (
-  <div {...draggableProps?.attributes} {...draggableProps?.listeners}>
-    <h3>{original.title}</h3>
-    <p>{original.description}</p>
-  </div>
-)
-
-// Use the component
 function App() {
-  const handleChange = async (input) => {
-    console.log('Items changed:', input.items)
-    // Handle the change (e.g., update your backend)
-  }
+  const columns: Column[] = [
+    { id: 'col-1', label: 'Lunes' },
+    { id: 'col-2', label: 'Martes' },
+    { id: 'col-3', label: 'Miércoles' },
+  ]
+
+  const rows: Row[] = [
+    { id: 'row-1', label: '9:00 AM' },
+    { id: 'row-2', label: '10:00 AM' },
+    { id: 'row-3', label: '11:00 AM' },
+  ]
+
+  const items: Item<MyData>[] = [
+    {
+      id: 'item-1',
+      columnId: 'col-1',
+      rowId: 'row-1',
+      start: 0,
+      duration: 2,
+      data: {
+        id: '1',
+        title: 'Reunión',
+        description: 'Standup del equipo'
+      }
+    },
+    // ... más items
+  ]
 
   return (
     <DynamicSchedule
       columns={columns}
       rows={rows}
       items={items}
-      ScheduleItemComponent={ScheduleItemComponent}
-      onChange={handleChange}
-      firstColumnWidth={100}
-      headerHeight={50}
-      rowHeight={60}
-      minColumnWidth={150}
+      onChange={(data) => {
+        console.log('Items actualizados:', data.items)
+      }}
+      ScheduleItemComponent={({ item }) => (
+        <div>
+          <h3>{item.data.title}</h3>
+          <p>{item.data.description}</p>
+        </div>
+      )}
     />
   )
 }
 ```
 
-## Props
+## Props del Componente
 
-### Required Props
+### DynamicScheduleProps<T>
 
-| Prop | Type | Description |
+#### Props Requeridas
+
+| Prop | Tipo | Descripción |
 |------|------|-------------|
-| `columns` | `Column[]` | Array of column definitions |
-| `rows` | `Row[]` | Array of row definitions |
-| `items` | `Item<T>[]` | Array of schedule items |
-| `ScheduleItemComponent` | `React.FC<ScheduleItemComponentProps<T>>` | Component to render each item |
-| `onChange` | `DynamicScheduleOnChangeCallback<T>` | Callback when items are moved |
-| `firstColumnWidth` | `number` | Width of the first column in pixels |
-| `headerHeight` | `number` | Height of the header row in pixels |
-| `rowHeight` | `number` | Height of each row in pixels |
-| `minColumnWidth` | `number` | Minimum width of columns in pixels |
+| `columns` | `Column[]` | Array de columnas del schedule |
+| `rows` | `Row[]` | Array de filas del schedule |
+| `items` | `Item<T>[]` | Array de items a mostrar |
+| `onChange` | `(data) => void` | Callback cuando los items cambian (drag & drop) |
+| `ScheduleItemComponent` | `Component` | Componente para renderizar cada item |
 
-### Optional Props
+#### Props Opcionales
 
-| Prop | Type | Description |
-|------|------|-------------|
-| `firstColumnText` | `string` | Text for the first column header |
-| `VoidItemComponent` | `React.FC<ScheduleVoidItemComponentProps>` | Component for empty cells |
-| `scrollIndicator` | `ScrollIndicator` | Configuration for scroll indicators |
-| `headerClassName` | `string` | Custom CSS class for header |
-| `containerClassName` | `string` | Custom CSS class for container |
-| `firstColumnClassName` | `string` | Custom CSS class for first column |
-| `currentLineClassName` | `string` | Custom CSS class for current time line |
-| `getItemCanDragOnX` | `(itemId: string) => boolean` | Function to determine if item can be dragged horizontally |
+| Prop | Tipo | Default | Descripción |
+|------|------|---------|-------------|
+| `ScheduleVoidItemComponent` | `Component` | - | Componente para celdas vacías (clickeables) |
+| `scrollIndicator` | `ScrollIndicator` | - | Configuración del indicador de scroll |
+| `headerHeight` | `number` | `48` | Altura del header en pixels |
+| `rowHeight` | `number` | `80` | Altura de cada fila en pixels |
+| `fixedColumnWidth` | `number` | - | Ancho de la columna fija (primera columna) |
+| `minColumnWidth` | `number` | - | Ancho mínimo de columnas dinámicas |
+| `getItemCanDragOnX` | `(item) => boolean` | - | Función para determinar si un item puede moverse horizontalmente |
+| `headerClassName` | `string` | - | Clase CSS personalizada para el header |
+| `containerClassName` | `string` | - | Clase CSS personalizada para el contenedor |
+| `fixedColumnClassName` | `string` | - | Clase CSS personalizada para la columna fija |
+| `currentLineClassName` | `string` | - | Clase CSS personalizada para la línea de tiempo actual |
 
-## Types
+## Tipos
 
 ### Column
+
 ```typescript
 interface Column {
   id: string
@@ -143,6 +231,7 @@ interface Column {
 ```
 
 ### Row
+
 ```typescript
 interface Row {
   id: string
@@ -151,88 +240,238 @@ interface Row {
 ```
 
 ### Item<T>
+
 ```typescript
 interface Item<T> {
   id: string
-  columnId: Column['id']
-  rowStart: number
-  rowSpan: number
-  original: T
+  columnId: string  // ID de la columna
+  rowId: string     // ID de la fila
+  start: number     // Posición inicial (índice de fila)
+  duration: number  // Duración (cantidad de filas que ocupa)
+  data: T           // Tus datos personalizados
 }
 ```
 
 ### ScrollIndicator
+
 ```typescript
 interface ScrollIndicator {
-  quantity: number // px
-  autoScroll: boolean
+  quantity: number    // Cantidad de pixels a scrollear
+  autoScroll: boolean // Si debe hacer auto-scroll al arrastrar
 }
 ```
 
-## Advanced Features
+### ScheduleItemComponentProps<T>
 
-### Multi-Selection
+```typescript
+interface ScheduleItemComponentProps<T> {
+  item: Item<T>
+  // ... props adicionales proporcionados por el sistema de drag & drop
+}
+```
 
-Hold `Ctrl` (or `Cmd` on Mac) while clicking items to select multiple items. Selected items can be dragged together.
+### ScheduleVoidItemComponentProps
 
-### Scroll Indicators
+```typescript
+interface ScheduleVoidItemComponentProps {
+  columnId: string
+  rowId: string
+  // ... props adicionales
+}
+```
 
-Configure scroll indicators to automatically scroll when dragging items near the edges:
+## Características Avanzadas
+
+### Multi-selección
+
+Mantén presionado `Ctrl` (o `Cmd` en Mac) mientras haces clic en los items para seleccionar múltiples items. Los items seleccionados se pueden arrastrar juntos.
+
+Presiona `Escape` para limpiar la selección.
+
+### Indicadores de Scroll
+
+Configura indicadores de scroll para desplazarse automáticamente cuando arrastres items cerca de los bordes:
 
 ```tsx
 <DynamicSchedule
-  // ... other props
+  // ... otras props
   scrollIndicator={{
-    quantity: 50, // pixels to scroll
-    autoScroll: true,
+    quantity: 50,      // pixels a desplazar
+    autoScroll: true,  // activar auto-scroll
   }}
 />
 ```
 
-### Custom Void Cells
+### Celdas Vacías Personalizadas
 
-Provide a custom component for empty cells:
+Proporciona un componente personalizado para las celdas vacías (útil para permitir crear nuevos items):
 
 ```tsx
-const VoidCell = ({ row, column }) => (
-  <div>
-    <p>Empty slot at {row.label}</p>
+const VoidCell = ({ columnId, rowId }) => (
+  <div onClick={() => createNewItem(columnId, rowId)}>
+    <p>Click para crear un evento</p>
   </div>
 )
 
 <DynamicSchedule
-  // ... other props
-  VoidItemComponent={VoidCell}
+  // ... otras props
+  ScheduleVoidItemComponent={VoidCell}
 />
 ```
 
-## Styling
+### Controlar Movimiento Horizontal
 
-The component uses Tailwind CSS for styling. Import the styles in your application:
+Puedes controlar si un item puede moverse horizontalmente (entre columnas):
 
 ```tsx
-import 'dynamic-schedule/styles'
+<DynamicSchedule
+  // ... otras props
+  getItemCanDragOnX={(item) => {
+    // Por ejemplo, solo permitir mover items de cierto tipo
+    return item.data.type === 'movable'
+  }}
+/>
 ```
 
-You can customize the appearance by passing custom className props or by overriding the Tailwind classes.
+### Hooks Exportados
+
+El paquete exporta hooks útiles para casos de uso avanzados:
+
+```typescript
+import {
+  useItemsByColumn,
+  useCoincidencesByColumn,
+  useDynamicScheduleStore,
+  useDynamicScheduleScrollIndicatorStore,
+  useDynamicScheduleSelectedItemsStore,
+  useDynamicScheduleMovementStore,
+} from 'dynamic-schedule'
+```
+
+### Utilidades Exportadas
+
+```typescript
+import {
+  getCoincidences,
+  // funciones de cálculo
+  // constantes
+} from 'dynamic-schedule'
+```
+
+## FAQ Técnico
+
+### ¿Por qué Tailwind no se importa directamente en el paquete?
+
+El paquete **no incluye** los estilos compilados de Tailwind por diseño:
+
+1. **Evita duplicación**: Si el paquete incluyera todo Tailwind CSS, y tu proyecto también usa Tailwind, terminarías con estilos duplicados y un bundle más grande.
+
+2. **Permite personalización**: Al usar Tailwind de tu proyecto, puedes personalizar el theme y los componentes heredarán esa configuración.
+
+3. **Es una práctica estándar**: Las bibliotecas de componentes con Tailwind generalmente funcionan así (shadcn/ui, Headless UI, Radix UI + Tailwind, etc.).
+
+### ¿Cómo funciona internamente?
+
+Cuando se construye el paquete con Vite:
+
+1. **El código se transpila**: Los componentes React se convierten a JavaScript estándar.
+2. **Las clases quedan como strings**: Las clases de Tailwind permanecen como texto en los atributos `className`:
+   ```javascript
+   // En dynamic-schedule/dist/dynamic-schedule.js
+   createElement("div", { className: "flex items-center gap-2" })
+   ```
+3. **Tailwind CSS en tu proyecto escanea estos strings**: Gracias a la configuración en `tailwind.config.ts`, Tailwind:
+   - Escanea `node_modules/dynamic-schedule/dist/**/*`
+   - Encuentra todas las clases usadas (`flex`, `items-center`, `gap-2`, etc.)
+   - Genera el CSS necesario para esas clases específicas
+   - Incluye ese CSS en tu bundle final
+
+### ¿Qué pasa si olvido configurar el tailwind.config?
+
+Si olvidas agregar la ruta del paquete en `content`, Tailwind no escaneará el código del paquete, no generará los estilos para esas clases, y los componentes se verán sin estilos o rotos.
+
+**Síntomas**:
+- Los componentes aparecen pero no tienen estilos
+- El layout está desorganizado
+- Los colores, espaciados y fuentes no se aplican
+
+**Solución**: Verifica que tu `tailwind.config.ts` incluya:
+```typescript
+content: [
+  "./src/**/*.{js,ts,jsx,tsx}",
+  "./node_modules/dynamic-schedule/dist/**/*.{js,ts,jsx,tsx}", // ← Esta línea es crucial
+]
+```
+
+## Solución de Problemas
+
+### Los componentes no tienen estilos
+
+**Causa**: Tailwind no está escaneando el paquete.
+
+**Solución**: Verifica que tu `tailwind.config.ts` incluya la ruta del paquete en el array `content`.
+
+### Error: Cannot find module 'tailwindcss'
+
+**Causa**: Tailwind no está instalado en tu proyecto.
+
+**Solución**: Instala Tailwind CSS:
+```bash
+npm install -D tailwindcss @tailwindcss/vite
+```
+
+### Las clases personalizadas de Tailwind no funcionan
+
+**Causa**: Estás usando Tailwind v3 en lugar de v4.
+
+**Solución**: Este paquete requiere Tailwind CSS v4. Actualiza:
+```bash
+npm install -D tailwindcss@^4.0.0 @tailwindcss/vite
+```
+
+### Error: Cannot find module '@dnd-kit/core'
+
+**Causa**: Faltan peer dependencies.
+
+**Solución**: Instala todas las peer dependencies:
+```bash
+npm install @dnd-kit/core @dnd-kit/modifiers zustand clsx lucide-react
+```
 
 ## TypeScript
 
-This library is written in TypeScript and provides full type definitions. The main component is generic and can work with any data type:
+Esta biblioteca está escrita en TypeScript y proporciona definiciones de tipos completas. El componente principal es genérico y puede trabajar con cualquier tipo de datos:
 
 ```typescript
-interface MyCustomData {
-  // your data structure
+interface MisDatosPersonalizados {
+  titulo: string
+  descripcion: string
+  color: string
+  // ... tus propiedades
 }
 
-const items: Item<MyCustomData>[] = [...]
-<DynamicSchedule<MyCustomData> ... />
+const items: Item<MisDatosPersonalizados>[] = [...]
+
+<DynamicSchedule<MisDatosPersonalizados>
+  items={items}
+  ScheduleItemComponent={({ item }) => (
+    <div style={{ backgroundColor: item.data.color }}>
+      <h3>{item.data.titulo}</h3>
+      <p>{item.data.descripcion}</p>
+    </div>
+  )}
+  // ... otras props
+/>
 ```
 
-## License
+## Licencia
 
 MIT
 
-## Contributing
+## Autor
 
-Contributions are welcome! Please feel free to submit a Pull Request.
+Your Name
+
+## Contribuir
+
+Las contribuciones son bienvenidas! Por favor, siéntete libre de enviar un Pull Request.
