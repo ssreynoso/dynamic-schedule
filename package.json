@@ -1,32 +1,66 @@
 {
     "name": "dynamic-schedule",
-    "private": true,
-    "version": "0.0.0",
+    "version": "0.1.0",
     "type": "module",
+    "description": "A dynamic schedule component library for React with drag & drop functionality",
+    "author": "Your Name",
+    "license": "MIT",
+    "keywords": [
+        "react",
+        "schedule",
+        "calendar",
+        "drag-and-drop",
+        "component",
+        "typescript"
+    ],
+    "main": "./dist/dynamic-schedule.cjs",
+    "module": "./dist/dynamic-schedule.js",
+    "types": "./dist/index.d.ts",
+    "exports": {
+        ".": {
+            "import": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/dynamic-schedule.js"
+            },
+            "require": {
+                "types": "./dist/index.d.ts",
+                "default": "./dist/dynamic-schedule.cjs"
+            }
+        }
+    },
+    "files": [
+        "dist"
+    ],
+    "peerDependencies": {
+        "@dnd-kit/core": "^6.0.0",
+        "@dnd-kit/modifiers": "^7.0.0 || ^8.0.0 || ^9.0.0",
+        "clsx": "^2.0.0",
+        "lucide-react": "^0.400.0",
+        "react": "^18.0.0 || ^19.0.0",
+        "react-dom": "^18.0.0 || ^19.0.0",
+        "tailwindcss": "^4.0.0",
+        "zustand": "^4.0.0 || ^5.0.0"
+    },
     "scripts": {
         "dev": "vite",
-        "build": "tsc -b && vite build",
+        "build": "vite build",
+        "build:types": "tsc -p tsconfig.lib.json",
         "lint": "eslint .",
         "preview": "vite preview",
         "test": "vitest",
         "test:ui": "vitest --ui",
         "test:run": "vitest run",
-        "test:coverage": "vitest run --coverage"
+        "test:coverage": "vitest run --coverage",
+        "prepublishOnly": "pnpm build"
     },
     "dependencies": {
-        "@dnd-kit/core": "^6.3.1",
-        "@dnd-kit/modifiers": "^9.0.0",
-        "@radix-ui/react-separator": "^1.1.2",
-        "@tailwindcss/vite": "^4.1.3",
-        "clsx": "^2.1.1",
-        "lucide-react": "^0.542.0",
-        "react": "^19.0.0",
-        "react-dom": "^19.0.0",
-        "tailwindcss": "^4.1.3",
-        "zustand": "^5.0.3"
+        "@radix-ui/react-separator": "^1.1.2"
     },
     "devDependencies": {
+        "@dnd-kit/core": "^6.3.1",
+        "@dnd-kit/modifiers": "^9.0.0",
         "@eslint/js": "^9.21.0",
+        "@tailwindcss/vite": "^4.1.3",
         "@testing-library/jest-dom": "^6.9.1",
         "@testing-library/react": "^16.3.0",
         "@testing-library/user-event": "^14.6.1",
@@ -35,6 +69,7 @@
         "@vitejs/plugin-react-swc": "^3.8.0",
         "@vitest/coverage-v8": "^3.2.4",
         "@vitest/ui": "^3.2.4",
+        "clsx": "^2.1.1",
         "eslint": "^9.17.0",
         "eslint-config-prettier": "^10.0.1",
         "eslint-plugin-import": "^2.31.0",
@@ -43,12 +78,19 @@
         "eslint-plugin-react-refresh": "^0.4.16",
         "globals": "^15.15.0",
         "jsdom": "^27.0.0",
+        "lucide-react": "^0.542.0",
         "prettier": "^3.6.2",
         "prettier-plugin-tailwindcss": "^0.6.14",
+        "react": "^19.0.0",
+        "react-dom": "^19.0.0",
         "tailwind-merge": "^3.2.0",
+        "tailwindcss": "^4.1.3",
         "typescript": "~5.7.2",
         "typescript-eslint": "^8.24.1",
         "vite": "^6.2.0",
-        "vitest": "^3.2.4"
+        "vite-plugin-css-injected-by-js": "^3.5.2",
+        "vite-plugin-dts": "^4.5.4",
+        "vitest": "^3.2.4",
+        "zustand": "^5.0.3"
     }
 }
