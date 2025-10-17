@@ -18,16 +18,16 @@ export const DynamicScheduleFixedColumn = (props: DynamicScheduleFixedColumnProp
     return (
         <DynamicScheduleColumn
             id='dynamics-schedule-fixed-column'
-            className={cn('sticky top-0 left-0 z-[2]', className)}
+            className={cn('ds-sticky ds-top-0 ds-left-0 ds-z-2', className)}
             rowHeight={rowHeight}
             headerHeight={headerHeight}
         >
-            <DynamicScheduleColumnHeader className={cn('z-[2] border-none', headerClassName)}>
+            <DynamicScheduleColumnHeader className={cn('ds-z-2 ds-border-none', headerClassName)}>
                 {firstColumnText}
             </DynamicScheduleColumnHeader>
             {rows.map((row, idx) => (
-                <div className='relative flex h-full w-full' key={row.id}>
-                    {idx !== 0 && <span className='absolute top-0 right-1 translate-y-[-50%]'>{row.label}</span>}
+                <div className='ds-relative ds-flex ds-h-full ds-w-full' key={row.id}>
+                    {idx !== 0 && <span className='ds-absolute ds-top-0 ds-right-1 ds-translate-y-neg-50'>{row.label}</span>}
                 </div>
             ))}
         </DynamicScheduleColumn>

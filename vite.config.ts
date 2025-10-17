@@ -1,7 +1,6 @@
 import { defineConfig } from 'vite'
 import { resolve } from 'path'
 import react from '@vitejs/plugin-react-swc'
-import tailwindcss from '@tailwindcss/vite'
 import dts from 'vite-plugin-dts'
 import cssInjectedByJsPlugin from 'vite-plugin-css-injected-by-js'
 
@@ -12,7 +11,6 @@ export default defineConfig({
     },
     plugins: [
         react(),
-        tailwindcss(),
         cssInjectedByJsPlugin(),
         dts({
             include: ['src/modules/dynamic-schedule/**/*'],
@@ -36,9 +34,7 @@ export default defineConfig({
                 '@dnd-kit/modifiers',
                 '@radix-ui/react-separator',
                 'zustand',
-                'clsx',
                 'lucide-react',
-                'tailwindcss',
             ],
             output: {
                 globals: {

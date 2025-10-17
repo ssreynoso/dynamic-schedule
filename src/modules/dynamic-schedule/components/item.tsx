@@ -45,17 +45,17 @@ export const DynamicScheduleItem = <T,>(props: DynamicScheduleAbsoluteProps<T>) 
     }
 
     return (
-        <div id={id} ref={setNodeRef} className={cn('absolute', className)} style={styles}>
+        <div id={id} ref={setNodeRef} className={cn('ds-absolute', className)} style={styles}>
             {isCtrlPressed && (
                 <div
                     onClick={handleSelectItem}
-                    className='absolute z-10 flex h-full w-full cursor-pointer items-center justify-center rounded-lg bg-blue-500/30 transition-all hover:bg-blue-500/50'
+                    className='ds-absolute ds-z-10 ds-flex ds-h-full ds-w-full ds-cursor-pointer ds-items-center ds-justify-center ds-rounded-lg ds-bg-blue-500-30 ds-transition-all ds-hover-bg-blue-500-50'
                 >
                     {isSelected ? <Minus /> : <Plus />}
                 </div>
             )}
             {isSelected && (
-                <div className='absolute bottom-1 left-1 rounded-full bg-black p-1 text-white'>
+                <div className='ds-absolute ds-bottom-1 ds-left-1 ds-rounded-full ds-bg-black ds-p-1 ds-text-white'>
                     <Check size={16} />
                 </div>
             )}
