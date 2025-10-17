@@ -14,7 +14,7 @@ export type {
     DynamicScheduleOnChangeCallbackInput,
     ScheduleItemComponentProps,
     ScheduleVoidItemComponentProps,
-    ScrollIndicator,
+    ScrollIndicator
 } from './types'
 
 // Hooks (if needed by consumers)

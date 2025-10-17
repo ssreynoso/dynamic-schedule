@@ -65,5 +65,10 @@ export interface DynamicScheduleProps<T> {
     containerStyle?: React.CSSProperties
     firstColumnClassName?: string
     currentLineClassName?: string
+    selectedItemCheckClassName?: string
+    selectedItemCheckStyle?: React.CSSProperties
+    ctrlButtonClassName?: string
+    ctrlButtonStyle?: React.CSSProperties
+    showCurrentLine?: boolean
     getItemCanDragOnX?: (itemId: Item<T>['id']) => boolean
 }

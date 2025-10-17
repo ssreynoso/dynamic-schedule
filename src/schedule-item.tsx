@@ -1,10 +1,26 @@
-import { ScheduleItemComponentProps } from './modules/dynamic-schedule/types'
+import { ScheduleItemComponentProps } from './modules/dynamic-schedule'
 
 export const ScheduleItem = ({ original, draggableProps }: ScheduleItemComponentProps<{ name: string }>) => {
     return (
-        <div className='h-full w-full border bg-red-300'>
+        <div
+            style={{
+                height: '100%',
+                width: '100%',
+                border: '1px solid #000',
+                backgroundColor: '#fca5a5'
+            }}
+        >
             <div
-                className='absolute top-1 right-1 h-[20px] w-[20px] cursor-move rounded-full bg-emerald-300'
+                style={{
+                    position: 'absolute',
+                    top: '4px',
+                    right: '4px',
+                    height: '20px',
+                    width: '20px',
+                    cursor: 'move',
+                    borderRadius: '9999px',
+                    backgroundColor: '#6ee7b7'
+                }}
                 {...draggableProps?.attributes}
                 {...draggableProps?.listeners}
             ></div>
