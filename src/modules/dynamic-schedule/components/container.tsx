@@ -59,7 +59,7 @@ const DynamicScheduleContainerInner = <T,>(props: DynamicScheduleContainerProps<
                     containerRef.current = node
                 }}
                 id={containerId}
-                className={cn('relative grid h-full w-full overflow-x-auto', className)}
+                className={cn('ds-schedule-root ds-relative ds-grid ds-h-full ds-w-full ds-overflow-x-auto', className)}
                 style={styles}
             >
                 <ScrollHandler containerRef={containerRef} />

@@ -17,7 +17,7 @@ export const DynamicScheduleDroppableColumn = (props: DynamicScheduleDroppableCo
     }
 
     return (
-        <div className={cn('relative grid h-full w-full grid-cols-1', className)} style={styles}>
+        <div className={cn('ds-relative ds-grid ds-h-full ds-w-full ds-grid-cols-1', className)} style={styles}>
             <div />
             {children}
         </div>

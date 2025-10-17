@@ -31,6 +31,7 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
         minColumnWidth,
         headerClassName,
         containerClassName,
+        containerStyle,
         firstColumnClassName,
         currentLineClassName,
         getItemCanDragOnX,
@@ -58,7 +59,7 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
         <DynamicScheduleContainer
             items={items}
             columns={columns}
-            styles={styles}
+            styles={{ ...styles, ...containerStyle }}
             rowHeight={rowHeight}
             rows={rows}
             ScheduleItemComponent={ScheduleItemComponent}

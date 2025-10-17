@@ -23,5 +23,5 @@ export const DynamicScheduleCurrentLine = (props: DynamicScheduleCurrentLineProp
 
     if (!scrollIndicator) return null
 
-    return <div className={cn('pointer-events-none absolute z-[1] h-[1px] bg-red-500', className)} style={styles} />
+    return <div className={cn('ds-pointer-events-none ds-absolute ds-z-1 ds-h-1px ds-bg-red-500', className)} style={styles} />
 }

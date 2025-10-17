@@ -22,7 +22,7 @@ export const DynamicScheduleDroppableItem = React.memo((props: DroppableItemProp
     const isActive = useDynamicScheduleStore(isActiveCalculator)
 
     return (
-        <div className={cn('h-full w-full transition-colors', isActive ? 'bg-cyan-800/20' : 'bg-white/20')}>
+        <div className={cn('ds-h-full ds-w-full ds-transition-colors', isActive ? 'ds-bg-cyan-800-20' : 'ds-bg-white-20')}>
             {children}
         </div>
     )

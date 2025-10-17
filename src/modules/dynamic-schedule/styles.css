@@ -1,1 +1,96 @@
-/* Los estilos de Tailwind deben ser provistos por el proyecto consumidor */
+/* Dynamic Schedule Styles */
+
+/* CSS Reset / Normalization */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+.ds-schedule-root {
+  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.ds-schedule-root * {
+  margin: 0;
+  padding: 0;
+}
+
+/* Layout */
+.ds-relative { position: relative; }
+.ds-absolute { position: absolute; }
+.ds-sticky { position: sticky; }
+
+/* Positioning */
+.ds-top-0 { top: 0; }
+.ds-left-0 { left: 0; }
+.ds-right-1 { right: 0.25rem; }
+.ds-bottom-1 { bottom: 0.25rem; }
+
+/* Z-index */
+.ds-z-1 { z-index: 1; }
+.ds-z-2 { z-index: 2; }
+.ds-z-10 { z-index: 10; }
+
+/* Display */
+.ds-flex { display: flex; }
+.ds-grid { display: grid; }
+.ds-grid-cols-1 { grid-template-columns: repeat(1, minmax(0, 1fr)); }
+
+/* Sizing */
+.ds-h-full { height: 100%; }
+.ds-h-1px { height: 1px; }
+.ds-w-full { width: 100%; }
+.ds-min-w-max { min-width: max-content; }
+
+/* Flexbox & Grid */
+.ds-items-end { align-items: flex-end; }
+.ds-items-center { align-items: center; }
+.ds-justify-center { justify-content: center; }
+
+/* Borders */
+.ds-border-b { border-bottom: 1px solid #e5e7eb; }
+.ds-border-r { border-right: 1px solid #e5e7eb; }
+.ds-border-none { border: none; }
+
+/* Padding */
+.ds-p-1 { padding: 0.25rem; }
+
+/* Pointer Events */
+.ds-pointer-events-none { pointer-events: none; }
+
+/* Overflow */
+.ds-overflow-x-auto { overflow-x: auto; }
+
+/* Backgrounds */
+.ds-bg-red-500 { background-color: #ef4444; }
+.ds-bg-cyan-800-20 { background-color: rgba(21, 94, 117, 0.2); }
+.ds-bg-white-20 { background-color: rgba(255, 255, 255, 0.2); }
+.ds-bg-blue-500-30 { background-color: rgba(59, 130, 246, 0.3); }
+.ds-bg-blue-500-50 { background-color: rgba(59, 130, 246, 0.5); }
+.ds-bg-black { background-color: #000000; }
+
+/* Backdrop */
+.ds-backdrop-blur { backdrop-filter: blur(2px); }
+
+/* Transitions */
+.ds-transition-colors { transition-property: color, background-color, border-color, text-decoration-color, fill, stroke; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+.ds-transition-all { transition-property: all; transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1); transition-duration: 150ms; }
+
+/* Border Radius */
+.ds-rounded-lg { border-radius: 0.5rem; }
+.ds-rounded-full { border-radius: 9999px; }
+
+/* Cursor */
+.ds-cursor-pointer { cursor: pointer; }
+
+/* Transform */
+.ds-translate-y-neg-50 { transform: translateY(-50%); }
+
+/* Text */
+.ds-text-white { color: white; }
+
+/* Hover States */
+.ds-hover-bg-blue-500-50:hover { background-color: rgba(59, 130, 246, 0.5); }

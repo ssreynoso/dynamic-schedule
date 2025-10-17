@@ -38,7 +38,7 @@ export const DynamicScheduleColumn = (props: DynamicScheduleColumnProps) => {
         <div
             ref={columnRef}
             id={id}
-            className={cn('relative grid h-full w-full grid-cols-1 border-r', className, isLast && 'border-none')}
+            className={cn('ds-relative ds-grid ds-h-full ds-w-full ds-grid-cols-1 ds-border-r', className, isLast && 'ds-border-none')}
             style={styles}
         >
             {children}

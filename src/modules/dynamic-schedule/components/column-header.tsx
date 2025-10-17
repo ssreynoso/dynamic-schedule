@@ -8,7 +8,7 @@ type DynamicScheduleColumnHeaderProps = PropsWithChildren<{
 
 export const DynamicScheduleColumnHeader = ({ children, className }: DynamicScheduleColumnHeaderProps) => {
     return (
-        <div className={cn('sticky top-0 z-[1] flex h-full w-full items-end justify-center border-b p-1', className)}>
+        <div className={cn('ds-sticky ds-top-0 ds-z-1 ds-flex ds-h-full ds-w-full ds-items-end ds-justify-center ds-border-b ds-p-1', className)}>
             {children}
         </div>
     )

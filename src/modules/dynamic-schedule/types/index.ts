@@ -62,6 +62,7 @@ export interface DynamicScheduleProps<T> {
     scrollIndicator?: ScrollIndicator | null
     headerClassName?: string
     containerClassName?: string
+    containerStyle?: React.CSSProperties
     firstColumnClassName?: string
     currentLineClassName?: string
     getItemCanDragOnX?: (itemId: Item<T>['id']) => boolean

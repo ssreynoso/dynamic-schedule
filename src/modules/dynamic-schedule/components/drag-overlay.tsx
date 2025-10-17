@@ -41,7 +41,7 @@ export const DynamicScheduleDragOverlay = <T,>(props: DynamicScheduleDragOverlay
     return (
         <DragOverlay dropAnimation={null} modifiers={modifiers}>
             {activeItem && activeItemData ? (
-                <div className='relative h-full' style={{ width: columnWidth || DEFAULT_COLUMN_WIDTH }}>
+                <div className='ds-relative ds-h-full' style={{ width: columnWidth || DEFAULT_COLUMN_WIDTH }}>
                     {/* Primary item being dragged */}
                     <ScheduleItemComponent original={activeItemData.itemToMove.original} />
 

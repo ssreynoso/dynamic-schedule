@@ -3,5 +3,5 @@ import { PropsWithChildren } from 'react'
 import { cn } from '../lib/utils'
 
 export const VoidCell = ({ children }: PropsWithChildren) => {
-    return <div className={cn('flex h-full w-full items-center justify-center border-b')}>{children}</div>
+    return <div className={cn('ds-flex ds-h-full ds-w-full ds-items-center ds-justify-center ds-border-b')}>{children}</div>
 }
