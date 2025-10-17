@@ -99,7 +99,14 @@ function App() {
     }, [])
 
     return (
-        <div className='container mx-auto h-[90vh] overflow-y-auto p-4'>
+        <div
+            style={{
+                width: '90vw',
+                height: '98vh',
+                backgroundColor: '#f3f4f6',
+                overflowY: 'auto'
+            }}
+        >
             <DynamicSchedule
                 scrollIndicator={scrollIndicator}
                 firstColumnWidth={firstColumnWidth}
@@ -113,8 +120,15 @@ function App() {
                 ScheduleItemComponent={ScheduleItem}
                 onChange={handleChange}
                 firstColumnText='Horarios'
-                firstColumnClassName='bg-gray-200'
-                headerClassName='bg-gray-200'
+                selectedItemCheckStyle={{
+                    borderColor: 'blue',
+                    backgroundColor: 'rgba(0, 0, 255, 0.1)',
+                    borderWidth: 2,
+                    position: 'absolute',
+                    right: 4,
+                    bottom: '8px'
+                }}
+                ctrlButtonStyle={{ backgroundColor: 'blue', color: 'white' }}
             />
         </div>
     )

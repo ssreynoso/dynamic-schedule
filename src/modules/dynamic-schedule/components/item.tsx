@@ -16,10 +16,23 @@ interface DynamicScheduleAbsoluteProps<T> {
     rowSpan: number
     rowHeight: number
     coincidences: ItemCoincidences
+    selectedItemCheckClassName?: string
+    selectedItemCheckStyle?: React.CSSProperties
+    ctrlButtonClassName?: string
+    ctrlButtonStyle?: React.CSSProperties
 }
 
 export const DynamicScheduleItem = <T,>(props: DynamicScheduleAbsoluteProps<T>) => {
-    const { item, className, ScheduleItemComponent, id } = props
+    const {
+        item,
+        className,
+        ScheduleItemComponent,
+        id,
+        selectedItemCheckClassName,
+        selectedItemCheckStyle,
+        ctrlButtonClassName,
+        ctrlButtonStyle
+    } = props
 
     const isCtrlPressed = useDynamicScheduleSelectedItemsStore(state => state.isCtrlPressed)
     const selectedItems = useDynamicScheduleSelectedItemsStore(state => state.selectedItems)
@@ -49,13 +62,23 @@ export const DynamicScheduleItem = <T,>(props: DynamicScheduleAbsoluteProps<T>) 
             {isCtrlPressed && (
                 <div
                     onClick={handleSelectItem}
-                    className='ds-absolute ds-z-10 ds-flex ds-h-full ds-w-full ds-cursor-pointer ds-items-center ds-justify-center ds-rounded-lg ds-bg-blue-500-30 ds-transition-all ds-hover-bg-blue-500-50'
+                    className={cn(
+                        'ds-absolute ds-z-10 ds-flex ds-h-full ds-w-full ds-cursor-pointer ds-items-center ds-justify-center ds-bg-blue-500-30 ds-transition-all ds-hover-bg-blue-500-50',
+                        ctrlButtonClassName
+                    )}
+                    style={ctrlButtonStyle}
                 >
                     {isSelected ? <Minus /> : <Plus />}
                 </div>
             )}
             {isSelected && (
-                <div className='ds-absolute ds-bottom-1 ds-left-1 ds-rounded-full ds-bg-black ds-p-1 ds-text-white'>
+                <div
+                    className={cn(
+                        'ds-absolute ds-bottom-1 ds-left-1 ds-rounded-full ds-bg-black ds-p-1 ds-text-white',
+                        selectedItemCheckClassName
+                    )}
+                    style={selectedItemCheckStyle}
+                >
                     <Check size={16} />
                 </div>
             )}

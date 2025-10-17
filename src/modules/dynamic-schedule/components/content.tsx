@@ -34,6 +34,11 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
         containerStyle,
         firstColumnClassName,
         currentLineClassName,
+        selectedItemCheckClassName,
+        selectedItemCheckStyle,
+        ctrlButtonClassName,
+        ctrlButtonStyle,
+        showCurrentLine = true,
         getItemCanDragOnX,
         onChange
     } = props
@@ -68,11 +73,13 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
             className={containerClassName}
             getItemCanDragOnX={getItemCanDragOnX}
         >
-            <DynamicScheduleCurrentLine
-                className={currentLineClassName}
-                firstColumnWidth={firstColumnWidth}
-                columnsQuantity={columns.length}
-            />
+            {showCurrentLine && (
+                <DynamicScheduleCurrentLine
+                    className={currentLineClassName}
+                    firstColumnWidth={firstColumnWidth}
+                    columnsQuantity={columns.length}
+                />
+            )}
             <DynamicScheduleFixedColumn
                 className={firstColumnClassName}
                 headerClassName={headerClassName}
@@ -122,6 +129,10 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
                                     rowHeight={rowHeight}
                                     rowStart={item.rowStart}
                                     rowSpan={item.rowSpan}
+                                    selectedItemCheckClassName={selectedItemCheckClassName}
+                                    selectedItemCheckStyle={selectedItemCheckStyle}
+                                    ctrlButtonClassName={ctrlButtonClassName}
+                                    ctrlButtonStyle={ctrlButtonStyle}
                                 />
                             )
                         })}
