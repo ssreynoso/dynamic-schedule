@@ -1,7 +1,6 @@
 import { useCallback, useEffect, useMemo, useState } from 'react'
 
-import { DynamicSchedule } from './modules/dynamic-schedule/components'
-import { DynamicScheduleOnChangeCallback } from './modules/dynamic-schedule/types'
+import { DynamicSchedule, DynamicScheduleOnChangeCallback } from './modules/dynamic-schedule'
 import { ScheduleItem } from './schedule-item'
 import { ScheduleVoidItem } from './schedule-void-item'
 
@@ -100,7 +99,7 @@ function App() {
     }, [])
 
     return (
-        <div className='container mx-auto h-screen'>
+        <div className='container mx-auto h-[90vh] overflow-y-auto p-4'>
             <DynamicSchedule
                 scrollIndicator={scrollIndicator}
                 firstColumnWidth={firstColumnWidth}
