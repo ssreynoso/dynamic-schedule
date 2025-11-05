@@ -175,6 +175,7 @@ function App() {
 | `scrollIndicator` | `ScrollIndicator` | `null` | Configuración del indicador de scroll automático |
 | `firstColumnText` | `string` | - | Texto a mostrar en la celda del header de la primera columna |
 | `getItemCanDragOnX` | `(itemId: string) => boolean` | - | Función para determinar si un item puede moverse horizontalmente (entre columnas) |
+| `getItemCanBeSelected` | `(itemId: string) => boolean` | - | Función para determinar si un item puede ser seleccionado en modo multi-selección |
 | `headerClassName` | `string` | - | Clase CSS personalizada para el header |
 | `containerClassName` | `string` | - | Clase CSS personalizada para el contenedor principal |
 | `containerStyle` | `React.CSSProperties` | - | Estilos inline para el contenedor principal |
@@ -310,6 +311,21 @@ Puedes controlar si un item puede moverse horizontalmente (entre columnas):
     // Por ejemplo, solo permitir mover ciertos items
     const item = items.find(i => i.id === itemId)
     return item?.original.movable === true
+  }}
+/>
+```
+
+### Controlar Selección de Items
+
+Puedes controlar qué items pueden ser seleccionados cuando se presiona `Ctrl`:
+
+```tsx
+<DynamicSchedule
+  // ... otras props
+  getItemCanBeSelected={(itemId) => {
+    // Por ejemplo, solo permitir seleccionar items pares
+    const itemIdNumber = parseInt(itemId, 10)
+    return itemIdNumber % 2 === 0
   }}
 />
 ```

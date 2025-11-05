@@ -71,4 +71,5 @@ export interface DynamicScheduleProps<T> {
     ctrlButtonStyle?: React.CSSProperties
     showCurrentLine?: boolean
     getItemCanDragOnX?: (itemId: Item<T>['id']) => boolean
+    getItemCanBeSelected?: (itemId: Item<T>['id']) => boolean
 }

@@ -118,6 +118,10 @@ function App() {
                 rows={horarios}
                 VoidItemComponent={ScheduleVoidItem}
                 ScheduleItemComponent={ScheduleItem}
+                getItemCanBeSelected={id => {
+                    const itemId = parseInt(id, 10)
+                    return itemId % 2 === 0
+                }}
                 onChange={handleChange}
                 firstColumnText='Horarios'
                 selectedItemCheckStyle={{

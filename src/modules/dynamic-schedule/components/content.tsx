@@ -40,6 +40,7 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
         ctrlButtonStyle,
         showCurrentLine = true,
         getItemCanDragOnX,
+        getItemCanBeSelected = () => true,
         onChange
     } = props
 
@@ -119,9 +120,12 @@ const DynamicScheduleContentInner = <T,>(props: DynamicScheduleProps<T>) => {
                         {columnItems.map(item => {
                             const itemCoincidences = coincidences.find(c => c.id === item.id)!
 
+                            const itemCanBeSelected = getItemCanBeSelected(item.id)
+
                             return (
                                 <DynamicScheduleItem
                                     item={item}
+                                    itemCanBeSelected={itemCanBeSelected}
                                     ScheduleItemComponent={ScheduleItemComponent}
                                     key={item.id}
                                     id={item.id}

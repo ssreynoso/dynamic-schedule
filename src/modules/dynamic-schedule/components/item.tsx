@@ -20,6 +20,7 @@ interface DynamicScheduleAbsoluteProps<T> {
     selectedItemCheckStyle?: React.CSSProperties
     ctrlButtonClassName?: string
     ctrlButtonStyle?: React.CSSProperties
+    itemCanBeSelected?: boolean
 }
 
 export const DynamicScheduleItem = <T,>(props: DynamicScheduleAbsoluteProps<T>) => {
@@ -31,7 +32,8 @@ export const DynamicScheduleItem = <T,>(props: DynamicScheduleAbsoluteProps<T>) 
         selectedItemCheckClassName,
         selectedItemCheckStyle,
         ctrlButtonClassName,
-        ctrlButtonStyle
+        ctrlButtonStyle,
+        itemCanBeSelected = true
     } = props
 
     const isCtrlPressed = useDynamicScheduleSelectedItemsStore(state => state.isCtrlPressed)
@@ -59,9 +61,48 @@ export const DynamicScheduleItem = <T,>(props: DynamicScheduleAbsoluteProps<T>) 
 
     return (
         <div id={id} ref={setNodeRef} className={cn('ds-absolute', className)} style={styles}>
+            {itemCanBeSelected && (
+                <SelectionComponent
+                    isCtrlPressed={isCtrlPressed}
+                    isSelected={isSelected}
+                    selectedItemCheckClassName={selectedItemCheckClassName}
+                    selectedItemCheckStyle={selectedItemCheckStyle}
+                    ctrlButtonClassName={ctrlButtonClassName}
+                    ctrlButtonStyle={ctrlButtonStyle}
+                    onSelectItem={handleSelectItem}
+                />
+            )}
+            <ScheduleItemComponent original={item.original} draggableProps={{ attributes, listeners }} />
+        </div>
+    )
+}
+
+interface SelectionComponentProps {
+    isCtrlPressed: boolean | undefined
+    onSelectItem: () => void
+    isSelected: boolean
+    selectedItemCheckClassName?: string
+    selectedItemCheckStyle?: React.CSSProperties
+    ctrlButtonClassName?: string
+    ctrlButtonStyle?: React.CSSProperties
+}
+
+const SelectionComponent = (props: SelectionComponentProps) => {
+    const {
+        isCtrlPressed,
+        isSelected,
+        selectedItemCheckClassName,
+        selectedItemCheckStyle,
+        ctrlButtonClassName,
+        ctrlButtonStyle,
+        onSelectItem
+    } = props
+
+    return (
+        <>
             {isCtrlPressed && (
                 <div
-                    onClick={handleSelectItem}
+                    onClick={onSelectItem}
                     className={cn(
                         'ds-absolute ds-z-10 ds-flex ds-h-full ds-w-full ds-cursor-pointer ds-items-center ds-justify-center ds-bg-blue-500-30 ds-transition-all ds-hover-bg-blue-500-50',
                         ctrlButtonClassName
@@ -82,8 +123,6 @@ export const DynamicScheduleItem = <T,>(props: DynamicScheduleAbsoluteProps<T>) 
                     <Check size={16} />
                 </div>
             )}
-
-            <ScheduleItemComponent original={item.original} draggableProps={{ attributes, listeners }} />
-        </div>
+        </>
     )
 }

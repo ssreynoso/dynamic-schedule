@@ -1,7 +1,13 @@
 import { DragMoveEvent, DragStartEvent } from '@dnd-kit/core'
 import { useState } from 'react'
 
-import { calculateGridPosition, calculateMovementDelta, calculatePixelPosition, hasMovement, validatePositionBounds } from '../lib/calculations'
+import {
+    calculateGridPosition,
+    calculateMovementDelta,
+    calculatePixelPosition,
+    hasMovement,
+    validatePositionBounds
+} from '../lib/calculations'
 import { DEFAULT_COLUMN_WIDTH } from '../lib/constants'
 import { mapToArray } from '../lib/utils'
 import { useDynamicScheduleMovementStore } from '../stores/dynamic-schedule-movement-store'
@@ -177,34 +183,36 @@ export const useContainerDragAndDrop = <T>(props: ContainerDragAndDropProps<T>) 
         const hasMultipleSelection = itemsToMove.length > 1
 
         // Apply delta to each item and validate new positions
-        const movedItems = itemsToMove.map(item => {
-            const currentColumnIndex = columns.findIndex(c => c.id === item.columnId)
-            const newColumnIndex = currentColumnIndex + deltaColumn
-            const newRowIndex = item.rowStart - 1 + deltaRow
+        const movedItems = itemsToMove
+            .map(item => {
+                const currentColumnIndex = columns.findIndex(c => c.id === item.columnId)
+                const newColumnIndex = currentColumnIndex + deltaColumn
+                const newRowIndex = item.rowStart - 1 + deltaRow
 
-            // Validate new position is within bounds
-            const isValid = validatePositionBounds({
-                columnIndex: newColumnIndex,
-                rowIndex: newRowIndex,
-                columns,
-                rows
+                // Validate new position is within bounds
+                const isValid = validatePositionBounds({
+                    columnIndex: newColumnIndex,
+                    rowIndex: newRowIndex,
+                    columns,
+                    rows
+                })
+
+                if (!isValid) {
+                    return null
+                }
+
+                const newItemCopy = { ...item }
+                newItemCopy.columnId = columns[newColumnIndex].id
+                newItemCopy.rowStart = newRowIndex + 1
+                newItemCopy.rowSpan = item.rowSpan
+
+                return {
+                    newScheduleItem: newItemCopy,
+                    newColumnId: columns[newColumnIndex].id,
+                    newRowId: rows[newRowIndex].id
+                }
             })
-
-            if (!isValid) {
-                return null
-            }
-
-            const newItemCopy = { ...item }
-            newItemCopy.columnId = columns[newColumnIndex].id
-            newItemCopy.rowStart = newRowIndex + 1
-            newItemCopy.rowSpan = item.rowSpan
-
-            return {
-                newScheduleItem: newItemCopy,
-                newColumnId: columns[newColumnIndex].id,
-                newRowId: rows[newRowIndex].id
-            }
-        }).filter((item): item is NonNullable<typeof item> => item !== null)
+            .filter((item): item is NonNullable<typeof item> => item !== null)
 
         // If no items are valid to move, cancel
         if (movedItems.length === 0) {
