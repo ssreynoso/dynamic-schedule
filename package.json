@@ -1,6 +1,6 @@
 {
     "name": "dynamic-schedule",
-    "version": "1.0.2",
+    "version": "1.1.0",
     "type": "module",
     "description": "A dynamic schedule component library for React with drag & drop functionality",
     "author": "Santiago Reynoso <s.reynosodunjo@gmail.com> (https://github.com/ssreynoso)",
